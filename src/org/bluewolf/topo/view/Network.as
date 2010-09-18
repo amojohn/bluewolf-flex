@@ -25,10 +25,21 @@ package org.bluewolf.topo.view {
 	
 	import com.adobe.utils.ArrayUtil;
 	
+	import flash.events.Event;
+	
+	import mx.controls.SWFLoader;
+	import mx.core.FlexGlobals;
 	import mx.events.DragEvent;
 	import mx.managers.DragManager;
+	import mx.styles.CSSStyleDeclaration;
+	import mx.styles.IStyleManager;
+	import mx.styles.IStyleManager2;
+	import mx.styles.StyleManager;
 	
 	import spark.components.BorderContainer;
+	
+	
+	[Style(name="bgImage", type="String", inherit="no")]
 	
 	/**
 	 * Network is a container which contains one or more layers.
@@ -36,6 +47,47 @@ package org.bluewolf.topo.view {
 	 * @author	Rui
 	 */
 	public class Network extends BorderContainer {
+		
+		private var bgLoader:SWFLoader;
+		
+		private static var classConstructed:Boolean = constructStyle();
+		private var backgroundImage:String;
+		private var bStylePropChanged:Boolean;
+		
+		private static function constructStyle():Boolean {
+			if (!FlexGlobals.topLevelApplication.styleManager
+					.getStyleDeclaration("org.bluewolf.topo.view.Network")) {
+				var style:CSSStyleDeclaration = new CSSStyleDeclaration();
+				style.defaultFactory = function():void {
+					this.backgroundImage = "";
+				};
+			FlexGlobals.topLevelApplication.styleManager
+				.setStyleDeclaration("org.bluewolf.topo.view.Network", style, true);
+			}
+			return true;
+		}
+		
+		override public function styleChanged(styleProp:String):void {
+			super.styleChanged(styleProp);
+			if (styleProp == "bgImage") {
+				bStylePropChanged = true;
+				invalidateDisplayList();
+				return;
+			}
+		}
+		
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+			if (bStylePropChanged) {
+				this.backgroundImage = getStyle("bgImage");
+				bgLoader = new SWFLoader();
+				bgLoader.addEventListener(Event.COMPLETE, onBgImageComplete);
+				bgLoader.load(this.backgroundImage);
+			}
+		}
+		
+		private function onBgImageComplete(e:Event):void {
+			this.setStyle("backgroundImage", bgLoader.content);
+		}
 		
 		private var _layers:Array = new Array();
 		
