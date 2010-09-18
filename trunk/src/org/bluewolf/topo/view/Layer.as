@@ -21,9 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package org.bluewolf.topo.component {
-	
-	import com.adobe.utils.ArrayUtil;
+package org.bluewolf.topo.view {
 	
 	import mx.events.DragEvent;
 	import mx.managers.DragManager;
@@ -31,57 +29,48 @@ package org.bluewolf.topo.component {
 	import spark.components.BorderContainer;
 	
 	/**
-	 * Network is a container which contains one or more layers.
+	 * Layer is used to create different layers in network container, it can contains nodes, links and other components
 	 * 
 	 * @author	Rui
 	 */
-	public class Network extends BorderContainer {
-		
-		private var _layers:Array = new Array();
-		
-		public function get layers():Array {
-			return this._layers;
-		}
+	public class Layer extends BorderContainer {
 		
 		/**
-		 * Constructor for Network class
+		 * Construtor for Layer class
 		 */
-		public function Network() {
+		public function Layer() {
 			super();
 			
 			this.initStyle();
 		}
 		
 		/**
-		 * Initialize container's style
+		 * Initialize layer's style
 		 */
 		private function initStyle():void {
 			this.setStyle("borderStyle", "none");
-			this.setStyle("backgroundColor", 0xffffff);
-			this.setStyle("backgroundAlpha", 1);
+			this.setStyle("backgroundAlpha", 0);
 		}
 		
 		/**
-		 * Add a layer in network, order by adding sequenct
-		 * @param layer A layer object to add in the network
-		 * @param x x-position of the added layer
-		 * @param y y-position of the added layer
+		 * Register initial events for the current layer
 		 */
-		public function addLayer(layer:Layer, x:Number=0, y:Number=0):void {
-			layer.x = x;
-			layer.y = y;
-			this.addChild(layer);
-			this._layers.push(layer);
+		private function registerEvents():void {
+			this.addEventListener(DragEvent.DRAG_ENTER, onDragEnter);
+			this.addEventListener(DragEvent.DRAG_DROP, onDragDrop);
 		}
 		
-		/**
-		 * Put the select layer on the top of container
-		 * @param layer The layer to put on the top of network
-		 */
-		public function selectLayer(layer:Layer):void {
-			if (ArrayUtil.arrayContainsValue(layers, layer)) {
-				layer.depth = 99;
+		private function onDragEnter(e:DragEvent):void {
+			if (e.dragSource.hasFormat("dragTarget")) {
+				DragManager.acceptDragDrop(e.currentTarget as BorderContainer);
 			}
+		}
+		
+		private function onDragDrop(e:DragEvent):void {
+			// TODO: code executed after user finish draging object
+			/*
+			 * Fire an event which contains object's destination coordinate
+			 */
 		}
 		
 	}
