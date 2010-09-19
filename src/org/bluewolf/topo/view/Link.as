@@ -23,6 +23,8 @@ THE SOFTWARE.
 
 package org.bluewolf.topo.view {
 	
+	import flash.geom.Point;
+	
 	import mx.core.UIComponent;
 	
 	/**
@@ -32,11 +34,45 @@ package org.bluewolf.topo.view {
 	 */
 	public class Link extends UIComponent {
 		
+		private var _srcNode:Node;
+		private var _dstNode:Node;
+		public var thickness:Number = 2;
+		
 		/**
 		 * Constructor for Link class
 		 */
 		public function Link() {
 			super();
+		}
+		
+		public function set source(value:Node):void {
+			this._srcNode = value;
+			drawLink();
+		}
+		
+		public function get source():Node {
+			return this._srcNode;
+		}
+		
+		public function set destination(value:Node):void {
+			this._dstNode = value;
+			drawLink();
+		}
+		
+		public function get destination():Node {
+			return this._dstNode;
+		}
+		
+		private function drawLink():void {
+			this.graphics.clear();
+			if (_srcNode != null && _dstNode != null) {
+				var sp:Point = _srcNode.getAlignPoint();
+				var dp:Point = _dstNode.getAlignPoint();
+				this.graphics.moveTo(sp.x, sp.y);
+				this.graphics.lineStyle(this.thickness, 0x00ff00);
+				this.graphics.lineTo(dp.x, dp.y);
+			}
+			invalidateDisplayList();
 		}
 		
 	}

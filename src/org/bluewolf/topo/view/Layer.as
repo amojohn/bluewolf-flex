@@ -117,8 +117,40 @@ package org.bluewolf.topo.view {
 		 */
 		public function removeNode(node:Node):Boolean {
 			if (ArrayUtil.arrayContainsValue(_nodes, node)) {
-				this.removeChild(node);
+				this.removeElement(node);
 				ArrayUtil.removeValueFromArray(_nodes, node);
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		/**
+		 * Get all links in this layer
+		 * @return An array of links object
+		 */
+		public function get links():Array {
+			return this._links;
+		}
+		
+		/**
+		 * Add link object into this layer
+		 * @param link The link object to be added in this layer, must be an instance of Link class or Subclass from Link
+		 */
+		public function addLink(link:Link):void {
+			this.addElementAt(link, 0);
+			this._links.push(link);
+		}
+		
+		/**
+		 * Remove link object from this layer
+		 * @param link The link object to be removed in this layer, must be an instance of Link class or Subclass from Link
+		 * @return If layer contains given link and succeed in removing it, return true, otherwise, return false
+		 */
+		public function removeLink(link:Link):Boolean {
+			if (ArrayUtil.arrayContainsValue(_links, link)) {
+				this.removeElement(link);
+				ArrayUtil.removeValueFromArray(_links, link);
 				return true;
 			} else {
 				return false;

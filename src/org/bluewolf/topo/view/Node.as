@@ -71,6 +71,7 @@ package org.bluewolf.topo.view {
 			
 			this.relativeX = relaX;
 			this.relativeY = relaY;
+			adjustPosition();
 		}
 		
 		/**
