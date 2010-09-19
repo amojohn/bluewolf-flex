@@ -23,6 +23,8 @@ THE SOFTWARE.
 
 package org.bluewolf.topo.view {
 	
+	import com.adobe.utils.ArrayUtil;
+	
 	import mx.events.DragEvent;
 	import mx.managers.DragManager;
 	
@@ -35,6 +37,9 @@ package org.bluewolf.topo.view {
 	 */
 	public class Layer extends BorderContainer {
 		
+		private var _nodes:Array;
+		private var _links:Array;
+		
 		/**
 		 * Construtor for Layer class
 		 */
@@ -42,13 +47,28 @@ package org.bluewolf.topo.view {
 			super();
 			
 			this.initStyle();
+			
+			this.percentWidth = 100;
+			this.percentHeight = 100;
+			
+			this._nodes = new Array();
+			this._links = new Array();
 		}
+		
+		/**
+		 * Disable the width property in layout, layout's width always equals to network object's width
+		 */
+		override public function set width(value:Number):void {}
+		/**
+		 * Disable the height property in layout, layout's height always equals to network object's height
+		 */
+		override public function set height(value:Number):void {}
 		
 		/**
 		 * Initialize layer's style
 		 */
 		private function initStyle():void {
-			this.setStyle("borderStyle", "none");
+			this.setStyle("borderVisible", false);
 			this.setStyle("backgroundAlpha", 0);
 		}
 		
@@ -71,6 +91,38 @@ package org.bluewolf.topo.view {
 			/*
 			 * Fire an event which contains object's destination coordinate
 			 */
+		}
+		
+		/**
+		 * Get all nodes in this layer
+		 * @return An array of nodes object
+		 */
+		public function get nodes():Array {
+			return this._nodes;
+		}
+		
+		/**
+		 * Add node object into this layer
+		 * @param node The node object to be added in this layer, must be an instance of Node class or Subclass from Node
+		 */
+		public function addNode(node:Node):void {
+			this.addElement(node);
+			this._nodes.push(node);
+		}
+		
+		/**
+		 * Remove node object from this layer
+		 * @param node The node object to be removed in this layer, must be an instance of Node class or Subclass from Node
+		 * @return If layer contains given node and succeed in removing it, return true, otherwise, return false
+		 */
+		public function removeNode(node:Node):Boolean {
+			if (ArrayUtil.arrayContainsValue(_nodes, node)) {
+				this.removeChild(node);
+				ArrayUtil.removeValueFromArray(_nodes, node);
+				return true;
+			} else {
+				return false;
+			}
 		}
 		
 	}

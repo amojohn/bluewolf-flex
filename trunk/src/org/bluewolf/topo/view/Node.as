@@ -23,11 +23,17 @@ THE SOFTWARE.
 
 package org.bluewolf.topo.view {
 	
+	import flash.events.Event;
 	import flash.geom.Point;
 	
+	import mx.controls.Image;
+	import mx.controls.Text;
+	
 	import org.bluewolf.topo.interf.IDragableElement;
+	import org.bluewolf.topo.model.ModelLocator;
 	
 	import spark.components.BorderContainer;
+	import spark.layouts.HorizontalLayout;
 	
 	/**
 	 * Node object in topological diagram, consist with icon(optional) and name label
@@ -36,30 +42,148 @@ package org.bluewolf.topo.view {
 	 */
 	public class Node extends BorderContainer implements IDragableElement {
 		
+		private var model:ModelLocator;
+		private var _icon:Image = new Image();
+		private var _label:Text = new Text();
+		private var _relativeX:Number = 0;
+		private var _relativeY:Number = 0;
+		
 		/**
 		 * Constructor for Node class
 		 */
-		public function Node() {
+		public function Node(relaX:Number=0, relaY:Number=0) {
 			super();
 			
+			this.minWidth = this.minHeight = 0;
+			
 			initStyle();
+			registerEvents();
+			model = ModelLocator.getInstance();
+			
+			/* Set this border container's layout to horizontal */
+			var layout:HorizontalLayout = new HorizontalLayout();
+			layout.paddingBottom = layout.paddingLeft = layout.paddingRight = layout.paddingTop = layout.gap = 0;
+			this.layout = layout;
+			this._label.selectable = false;
+			
+			this.addElement(_icon);
+			this.addElement(_label);
+			
+			this.relativeX = relaX;
+			this.relativeY = relaY;
+		}
+		
+		/**
+		 * Register initial events for the current layer
+		 */
+		private function registerEvents():void {
+			this._icon.addEventListener(Event.COMPLETE, onIconComplete);
+		}
+		
+		private function onIconComplete(e:Event):void {
+			this._icon.width = this._icon.contentWidth;
+			this._icon.height = this._icon.contentHeight;
+			adjustPosition();
+			this.dispatchEvent(e);
+		}
+		
+		/**
+		 * Icon path of this node
+		 * @param value Accessible path to a valid image
+		 */
+		public function set icon(value:String):void {
+			_icon.source = value;
+		}
+		
+		/**
+		 * Icon path of this node
+		 * @return Accessible path to this node's icon
+		 */
+		public function get icon():String {
+			return this._icon.source.toString();
+		}
+		
+		/**
+		 * Node name to display right to the icon
+		 */
+		public function set label(value:String):void {
+			this._label.text = value;
+		}
+		
+		/**
+		 * Node name to display right to the icon
+		 */
+		public function get label():String {
+			return this._label.text;
 		}
 		
 		/**
 		 * Implemention of getAlignPoint method in IDragableElement
 		 */
 		public function getAlignPoint():Point {
-			return null;
+			var pt:Point = new Point(this.x, this.y);
+			pt.x += _icon.width / 2;
+			pt.y += _icon.height / 2;
+			pt.x = int(pt.x / 10) * 10;
+			pt.y = int(pt.y / 10) * 10;
+			return pt;
 		}
 		
 		/**
 		 * Initialize node's style
 		 */
 		private function initStyle():void {
-			this.setStyle("borderStyle", "none");
+			this.setStyle("borderVisible", false);
 			this.setStyle("backgroundAlpha", 0);
 			this.setStyle("fontSize", 9);
 			this.setStyle("fontColor", 0x000000);
+			this._label.setStyle("fontSize", 9);
+		}
+		
+		/**
+		 * The relative x-coordinat position, range from 0 to 1(if < 0 or > 1 is also acceptable)
+		 */
+		public function set relativeX(value:Number):void {
+			this._relativeX = value;
+			this.x = model.appWidth * value;
+			adjustPosition();
+		}
+		
+		/**
+		 * The relative x-coordinat position, range from 0 to 1(if < 0 or > 1 is also acceptable)
+		 */
+		public function get relativeX():Number {
+			this._relativeX = Number((this.x / model.appWidth).toFixed(3));
+			return this._relativeX;
+		}
+		
+		/**
+		 * The relative y-coordinat position, range from 0 to 1(if < 0 or > 1 is also acceptable)
+		 */
+		public function set relativeY(value:Number):void {
+			this._relativeY = value;
+			this.y = model.appHeight * value;
+			adjustPosition();
+		}
+		
+		/**
+		 * The relative y-coordinat position, range from 0 to 1(if < 0 or > 1 is also acceptable)
+		 */
+		public function get relativeY():Number {
+			this._relativeY = Number((this.y / model.appHeight).toFixed(3));
+			return this._relativeY;
+		}
+		
+		/**
+		 * Adjust node position, adjustment policy depends on autoAlign property of network
+		 */
+		private function adjustPosition():void {
+			if (model.autoAlign) {
+				var pt:Point = this.getAlignPoint();
+				this.x = pt.x - _icon.width / 2;
+				this.y = pt.y - _icon.height / 2;
+			}
+			invalidateDisplayList();
 		}
 		
 	}
