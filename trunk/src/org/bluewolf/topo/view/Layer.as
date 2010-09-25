@@ -25,10 +25,21 @@ package org.bluewolf.topo.view {
 	
 	import com.adobe.utils.ArrayUtil;
 	
+	import flash.events.MouseEvent;
+	import flash.geom.Point;
+	
+	import mx.core.DragSource;
+	import mx.core.IUIComponent;
 	import mx.events.DragEvent;
 	import mx.managers.DragManager;
 	
+	import org.bluewolf.topo.event.BluewolfEvent;
+	import org.bluewolf.topo.event.DragDropEvent;
+	import org.bluewolf.topo.model.ModelLocator;
+	
 	import spark.components.BorderContainer;
+	
+	[Event(name="Drag_Drop", type="org.bluewolf.topo.event.DragDropEvent")]
 	
 	/**
 	 * Layer is used to create different layers in network container, it can contains nodes, links and other components
@@ -39,6 +50,7 @@ package org.bluewolf.topo.view {
 		
 		private var _nodes:Array;
 		private var _links:Array;
+		private var model:ModelLocator = ModelLocator.getInstance();
 		
 		/**
 		 * Construtor for Layer class
@@ -47,6 +59,7 @@ package org.bluewolf.topo.view {
 			super();
 			
 			this.initStyle();
+			this.registerEvents();
 			
 			this.percentWidth = 100;
 			this.percentHeight = 100;
@@ -80,19 +93,6 @@ package org.bluewolf.topo.view {
 			this.addEventListener(DragEvent.DRAG_DROP, onDragDrop);
 		}
 		
-		private function onDragEnter(e:DragEvent):void {
-			if (e.dragSource.hasFormat("dragTarget")) {
-				DragManager.acceptDragDrop(e.currentTarget as BorderContainer);
-			}
-		}
-		
-		private function onDragDrop(e:DragEvent):void {
-			// TODO: code executed after user finish draging object
-			/*
-			 * Fire an event which contains object's destination coordinate
-			 */
-		}
-		
 		/**
 		 * Get all nodes in this layer
 		 * @return An array of nodes object
@@ -108,6 +108,7 @@ package org.bluewolf.topo.view {
 		public function addNode(node:Node):void {
 			this.addElement(node);
 			this._nodes.push(node);
+			node.addEventListener(MouseEvent.MOUSE_MOVE, onNodeMouseMove);
 		}
 		
 		/**
@@ -157,5 +158,28 @@ package org.bluewolf.topo.view {
 			}
 		}
 		
+		private function onNodeMouseMove(e:MouseEvent):void {
+			var di:Node = e.currentTarget as Node;
+			var ds:DragSource = new DragSource();
+			ds.addData(di, "node");
+			ds.addData({x:di.mouseX, y:di.mouseY}, "mouse");
+			DragManager.doDrag(di, ds, e);
+		}
+		
+		private function onDragEnter(e:DragEvent):void {
+			if (e.dragSource.hasFormat("node")) {
+				DragManager.acceptDragDrop(e.currentTarget as Layer);
+			}
+		}
+		
+		private function onDragDrop(e:DragEvent):void {
+			var dataObj:Object = e.dragSource.dataForFormat("mouse");
+			var dragNode:Node = e.dragInitiator as Node;
+			dragNode.x = this.mouseX - dataObj.x;
+			dragNode.y = this.mouseY - dataObj.y;
+			
+			var event:DragDropEvent = new DragDropEvent(BluewolfEvent.DRAG_DROP, false, true, dragNode);
+			this.dispatchEvent(event);
+		}
 	}
 }
