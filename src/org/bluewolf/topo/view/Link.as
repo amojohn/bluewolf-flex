@@ -26,6 +26,7 @@ package org.bluewolf.topo.view {
 	import flash.geom.Point;
 	
 	import mx.core.UIComponent;
+	import mx.events.DragEvent;
 	
 	/**
 	 * Link object in topological diagram
@@ -45,24 +46,46 @@ package org.bluewolf.topo.view {
 			super();
 		}
 		
+		/**
+		 * Source node of this link
+		 * @param value An instance of Node class
+		 */
 		public function set source(value:Node):void {
 			this._srcNode = value;
+			this._srcNode.addEventListener(DragEvent.DRAG_COMPLETE, onDragComplete);
 			drawLink();
 		}
 		
+		/**
+		 * Source node of this link
+		 * @return An instance of Node class
+		 */
 		public function get source():Node {
 			return this._srcNode;
 		}
 		
+		/**
+		 * Destination node of this link
+		 * @param value An instance of Node class
+		 */
 		public function set destination(value:Node):void {
 			this._dstNode = value;
+			this._dstNode.addEventListener(DragEvent.DRAG_COMPLETE, onDragComplete);
 			drawLink();
 		}
 		
+		/**
+		 * Destination node of this link
+		 * @return An instance of Node class
+		 */
 		public function get destination():Node {
 			return this._dstNode;
 		}
 		
+		
+		/**
+		 * Draw a line between source and destination node in this Link object
+		 */
 		private function drawLink():void {
 			this.graphics.clear();
 			if (_srcNode != null && _dstNode != null) {
@@ -73,6 +96,14 @@ package org.bluewolf.topo.view {
 				this.graphics.lineTo(dp.x, dp.y);
 			}
 			invalidateDisplayList();
+		}
+		
+		/**
+		 * Listen the event fired after source or destination node dragged
+		 * @param e A DragEvent instance
+		 */
+		private function onDragComplete(e:DragEvent):void {
+			drawLink();
 		}
 		
 	}
