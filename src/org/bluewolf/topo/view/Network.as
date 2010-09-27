@@ -39,7 +39,7 @@ package org.bluewolf.topo.view {
 	
 	import org.bluewolf.topo.model.ModelLocator;
 	
-	import spark.components.BorderContainer;
+	import spark.components.Group;
 	
 	
 	/**
@@ -47,7 +47,7 @@ package org.bluewolf.topo.view {
 	 * 
 	 * @author	Rui
 	 */
-	public class Network extends BorderContainer {
+	public class Network extends Group {
 		
 		private var _layers:Array = new Array();
 		private var model:ModelLocator;
@@ -89,7 +89,6 @@ package org.bluewolf.topo.view {
 		 */
 		private function initStyle():void {
 			this.setStyle("borderVisible", false);
-			this.setStyle("backgroundColor", 0xffffff);
 			this.setStyle("backgroundAlpha", 0);
 		}
 		

@@ -37,7 +37,7 @@ package org.bluewolf.topo.view {
 	import org.bluewolf.topo.event.DragDropEvent;
 	import org.bluewolf.topo.model.ModelLocator;
 	
-	import spark.components.BorderContainer;
+	import spark.components.Group;
 	
 	[Event(name="Drag_Drop", type="org.bluewolf.topo.event.DragDropEvent")]
 	
@@ -46,7 +46,7 @@ package org.bluewolf.topo.view {
 	 * 
 	 * @author	Rui
 	 */
-	public class Layer extends BorderContainer {
+	public class Layer extends Group {
 		
 		private var _nodes:Array;
 		private var _links:Array;
