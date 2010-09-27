@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bluewolf-flex" basedir="../" default="compc">
+	
+	<taskdef resource="flexTasks.tasks" classpath="${flexTasks.tasks.jar}"/>
+	<property file="./build/build.properties"/>
+	
+	<target name="properties">
+		<fail unless="asdoc">The "asdoc" property must be set in ${build.dir}/build/build.properties.</fail>
+		<fail unless="compc">The "compc" property must be set in ${build.dir}/build/build.properties.</fail>
+		<fail unless="mxmlc">The "mxmlc" property must be set in ${build.dir}/build/build.properties.</fail>
+	</target>
+	
+	<target name="compc" depends="properties">
+		<!--
+		<echo>${src.dir}</echo>
+		<fileset dir="${src.dir}" id="src.files">
+			<include name="**\**"/>
+		</fileset>
+		<pathconvert property="bluewolf-flex_classes" pathsep=" " dirsep="." refid="src.files">
+			<map from="\" to="/"/>
+			<map from="${src.dir}/" to=""/>
+			<mapper>
+				<chainedmapper>
+					<globmapper from="*.as" to="*"/>
+				</chainedmapper>
+			</mapper>
+		</pathconvert>
+		<echo>${bluewolf-flex_classes}</echo>
+		-->
+		<compc debug="${boolean.debug}" output="${bin.dir}/${library.name}.swc"
+				keep-generated-actionscript="false">
+			<source-path path-element="${src.dir}"/>
+			<include-sources dir="${src.dir}" includes="*"/>
+			<compiler.library-path dir="${lib.dir}" append="true">
+				<include name="*.swc"/>
+			</compiler.library-path>
+		</compc>
+	</target>
+	
+	<!--
+	<target name="docs" depends="properties">
+		<exec executable="${asdoc}" spawn="no">
+			<arg line="-o ${doc.dir}"/>
+			<arg line="-sp ${src.dir}"/>
+			<arg line="-ds ${src.dir}"/>
+			<arg line="-window-title 'Bluewolf Flex 4 Library - ${library.name}"/>
+		</exec>
+	</target>
+	-->
+</project>
