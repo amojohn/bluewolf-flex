@@ -50,13 +50,13 @@ package org.bluewolf.topo.view {
 	public class Network extends Group {
 		
 		private var _layers:Array = new Array();
-		private var model:ModelLocator;
+		private var model:ModelLocator = ModelLocator.getInstance();
 		
 		/**
 		 * If autoAlign is true, all dragable elements in this network will automatically align to 10 x 10 unit,
 		 * if autoAlign is false, all dragable elements will locate in the exactly position.
 		 */
-		public function set autoAlign(value:Boolean):void {
+		public function set isAutoAlign(value:Boolean):void {
 			model.autoAlign = value;
 		}
 		
@@ -64,7 +64,7 @@ package org.bluewolf.topo.view {
 		 * If autoAlign is true, all dragable elements in this network will automatically align to 10 x 10 unit,
 		 * if autoAlign is false, all dragable elements will locate in the exactly position.
 		 */
-		public function get autoAlign():Boolean {
+		public function get isAutoAlign():Boolean {
 			return model.autoAlign;
 		}
 		
@@ -80,8 +80,6 @@ package org.bluewolf.topo.view {
 			
 			this.initStyle();
 			this.registerEvents();
-			
-			model = ModelLocator.getInstance();
 		}
 		
 		/**
@@ -130,12 +128,12 @@ package org.bluewolf.topo.view {
 		 * otherwise, return false
 		 */
 		public function removeLayer(layer:Layer):Boolean {
+			var isSuccess:Boolean = false;
 			if (ArrayUtil.arrayContainsValue(layers, layer)) {
 				ArrayUtil.removeValueFromArray(layers, layer);
-				return true;
-			} else {
-				return false;
+				isSuccess = true;
 			}
+			return isSuccess;
 		}
 		
 		/**
@@ -144,11 +142,12 @@ package org.bluewolf.topo.view {
 		 * @return If the network contains the given layer, return the selected layer, otherwise, return null
 		 */
 		public function selectLayer(layer:Layer):Layer {
+			var layerProxy:Layer = null;
 			if (ArrayUtil.arrayContainsValue(layers, layer)) {
 				layer.depth = 99;
-				return layer;
+				layerProxy = layer;
 			}
-			return null;
+			return layerProxy;
 		}
 		
 	}

@@ -89,11 +89,11 @@ package org.bluewolf.topo.view {
 		private function drawLink():void {
 			this.graphics.clear();
 			if (_srcNode != null && _dstNode != null) {
-				var sp:Point = _srcNode.getAlignPoint();
-				var dp:Point = _dstNode.getAlignPoint();
-				this.graphics.moveTo(sp.x, sp.y);
+				var sPoint:Point = _srcNode.getAlignPoint();
+				var dPoint:Point = _dstNode.getAlignPoint();
+				this.graphics.moveTo(sPoint.x, sPoint.y);
 				this.graphics.lineStyle(this.thickness, 0x00ff00);
-				this.graphics.lineTo(dp.x, dp.y);
+				this.graphics.lineTo(dPoint.x, dPoint.y);
 			}
 			invalidateDisplayList();
 		}
