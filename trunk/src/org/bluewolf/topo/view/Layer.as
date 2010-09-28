@@ -33,7 +33,7 @@ package org.bluewolf.topo.view {
 	import mx.events.DragEvent;
 	import mx.managers.DragManager;
 	
-	import org.bluewolf.topo.event.BluewolfEvent;
+	import org.bluewolf.topo.event.BluewolfEventConst;
 	import org.bluewolf.topo.event.DragDropEvent;
 	import org.bluewolf.topo.model.ModelLocator;
 	
@@ -50,7 +50,6 @@ package org.bluewolf.topo.view {
 		
 		private var _nodes:Array;
 		private var _links:Array;
-		private var model:ModelLocator = ModelLocator.getInstance();
 		
 		/**
 		 * Construtor for Layer class
@@ -117,13 +116,13 @@ package org.bluewolf.topo.view {
 		 * @return If layer contains given node and succeed in removing it, return true, otherwise, return false
 		 */
 		public function removeNode(node:Node):Boolean {
+			var isSuccess:Boolean = false;
 			if (ArrayUtil.arrayContainsValue(_nodes, node)) {
 				this.removeElement(node);
 				ArrayUtil.removeValueFromArray(_nodes, node);
-				return true;
-			} else {
-				return false;
+				isSuccess = true;
 			}
+			return isSuccess;
 		}
 		
 		/**
@@ -149,21 +148,21 @@ package org.bluewolf.topo.view {
 		 * @return If layer contains given link and succeed in removing it, return true, otherwise, return false
 		 */
 		public function removeLink(link:Link):Boolean {
+			var isSuccess:Boolean = false;
 			if (ArrayUtil.arrayContainsValue(_links, link)) {
 				this.removeElement(link);
 				ArrayUtil.removeValueFromArray(_links, link);
-				return true;
-			} else {
-				return false;
+				isSuccess = true;
 			}
+			return isSuccess;
 		}
 		
 		private function onNodeMouseMove(e:MouseEvent):void {
-			var di:Node = e.currentTarget as Node;
-			var ds:DragSource = new DragSource();
-			ds.addData(di, "node");
-			ds.addData({x:di.mouseX, y:di.mouseY}, "mouse");
-			DragManager.doDrag(di, ds, e);
+			var indicator:Node = e.currentTarget as Node;
+			var dataSource:DragSource = new DragSource();
+			dataSource.addData(indicator, "node");
+			dataSource.addData({x:indicator.mouseX, y:indicator.mouseY}, "mouse");
+			DragManager.doDrag(indicator, dataSource, e);
 		}
 		
 		private function onDragEnter(e:DragEvent):void {
@@ -173,12 +172,12 @@ package org.bluewolf.topo.view {
 		}
 		
 		private function onDragDrop(e:DragEvent):void {
-			var dataObj:Object = e.dragSource.dataForFormat("mouse");
+			var dataObj:Object = e.dragSource.dataForFormat("mouse") as Object;
 			var dragNode:Node = e.dragInitiator as Node;
 			dragNode.x = this.mouseX - dataObj.x;
 			dragNode.y = this.mouseY - dataObj.y;
 			
-			var event:DragDropEvent = new DragDropEvent(BluewolfEvent.DRAG_DROP, false, true, dragNode);
+			var event:DragDropEvent = new DragDropEvent(BluewolfEventConst.DRAG_DROP, false, true, dragNode);
 			this.dispatchEvent(event);
 		}
 	}

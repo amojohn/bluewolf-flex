@@ -42,7 +42,7 @@ package org.bluewolf.topo.view {
 	 */
 	public class Node extends BorderContainer implements IDragableElement {
 		
-		private var model:ModelLocator;
+		private var model:ModelLocator = ModelLocator.getInstance();
 		private var _icon:Image = new Image();
 		private var _label:Text = new Text();
 		private var _relativeX:Number = 0;
@@ -58,7 +58,6 @@ package org.bluewolf.topo.view {
 			
 			initStyle();
 			registerEvents();
-			model = ModelLocator.getInstance();
 			
 			/* Set this border container's layout to horizontal */
 			var layout:HorizontalLayout = new HorizontalLayout();
@@ -122,12 +121,12 @@ package org.bluewolf.topo.view {
 		 * Implemention of getAlignPoint method in IDragableElement
 		 */
 		public function getAlignPoint():Point {
-			var pt:Point = new Point(this.x, this.y);
-			pt.x += _icon.width / 2;
-			pt.y += _icon.height / 2;
-			pt.x = int(pt.x / 10) * 10;
-			pt.y = int(pt.y / 10) * 10;
-			return pt;
+			var point:Point = new Point(this.x, this.y);
+			point.x += _icon.width / 2;
+			point.y += _icon.height / 2;
+			point.x = int(point.x / 10) * 10;
+			point.y = int(point.y / 10) * 10;
+			return point;
 		}
 		
 		/**
@@ -180,9 +179,9 @@ package org.bluewolf.topo.view {
 		 */
 		private function adjustPosition():void {
 			if (model.autoAlign) {
-				var pt:Point = this.getAlignPoint();
-				this.x = pt.x - _icon.width / 2;
-				this.y = pt.y - _icon.height / 2;
+				var point:Point = this.getAlignPoint();
+				this.x = point.x - _icon.width / 2;
+				this.y = point.y - _icon.height / 2;
 			}
 			invalidateDisplayList();
 		}

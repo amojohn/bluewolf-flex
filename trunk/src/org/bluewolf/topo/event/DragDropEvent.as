@@ -36,20 +36,32 @@ package org.bluewolf.topo.event {
 	public class DragDropEvent extends Event {
 		
 		private var model:ModelLocator = ModelLocator.getInstance();
-		public var node:Node;
-		public var absoluteX:Number = 0;
-		public var absoluteY:Number = 0;
-		public var relativeX:Number = 0;
-		public var relativeY:Number = 0;
+		private var _node:Node;
+		private var _relativeX:Number = 0;
+		private var _relativeY:Number = 0;
 		
 		public function DragDropEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=true,
 										node:Node=null) {
 			super(type, bubbles, cancelable);
-			this.node = node;
-			this.absoluteX = node.x;
-			this.absoluteY = node.y;
-			this.relativeX = Number(Number(this.absoluteX / model.appWidth).toFixed(3));
-			this.relativeY = Number(Number(this.absoluteY / model.appHeight).toFixed(3));
+			this._node = node;
+			this._relativeX = Number(Number(node.x / model.appWidth).toFixed(3));
+			this._relativeY = Number(Number(node.y / model.appHeight).toFixed(3));
+		}
+		
+		override public function clone():Event {
+			return new DragDropEvent(type, bubbles, cancelable, _node);
+		}
+		
+		public function get node():Node {
+			return this._node;
+		}
+		
+		public function get relativeX():Number {
+			return this._relativeX;
+		}
+		
+		public function get relativeY():Number {
+			return this._relativeY;
 		}
 		
 	}
