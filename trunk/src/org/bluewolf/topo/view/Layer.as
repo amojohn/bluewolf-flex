@@ -34,8 +34,6 @@ package org.bluewolf.topo.view {
 	
 	import spark.components.Group;
 	
-	[Event(name="Drag_Drop", type="org.bluewolf.topo.event.DragDropEvent")]
-	
 	/**
 	 * Layer is used to create different layers in network container, it can contains nodes, links and other components
 	 * 
