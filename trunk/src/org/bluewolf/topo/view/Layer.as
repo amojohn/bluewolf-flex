@@ -26,16 +26,11 @@ package org.bluewolf.topo.view {
 	import com.adobe.utils.ArrayUtil;
 	
 	import flash.events.MouseEvent;
-	import flash.geom.Point;
 	
 	import mx.core.DragSource;
-	import mx.core.IUIComponent;
-	import mx.events.DragEvent;
 	import mx.managers.DragManager;
 	
-	import org.bluewolf.topo.event.BluewolfEventConst;
 	import org.bluewolf.topo.event.DragDropEvent;
-	import org.bluewolf.topo.model.ModelLocator;
 	
 	import spark.components.Group;
 	
@@ -58,7 +53,6 @@ package org.bluewolf.topo.view {
 			super();
 			
 			this.initStyle();
-			this.registerEvents();
 			
 			this.percentWidth = 100;
 			this.percentHeight = 100;
@@ -88,8 +82,6 @@ package org.bluewolf.topo.view {
 		 * Register initial events for the current layer
 		 */
 		private function registerEvents():void {
-			this.addEventListener(DragEvent.DRAG_ENTER, onDragEnter);
-			this.addEventListener(DragEvent.DRAG_DROP, onDragDrop);
 		}
 		
 		/**
@@ -163,22 +155,6 @@ package org.bluewolf.topo.view {
 			dataSource.addData(indicator, "node");
 			dataSource.addData({x:indicator.mouseX, y:indicator.mouseY}, "mouse");
 			DragManager.doDrag(indicator, dataSource, e);
-		}
-		
-		private function onDragEnter(e:DragEvent):void {
-			if (e.dragSource.hasFormat("node")) {
-				DragManager.acceptDragDrop(e.currentTarget as Layer);
-			}
-		}
-		
-		private function onDragDrop(e:DragEvent):void {
-			var dataObj:Object = e.dragSource.dataForFormat("mouse") as Object;
-			var dragNode:Node = e.dragInitiator as Node;
-			dragNode.x = this.mouseX - dataObj.x;
-			dragNode.y = this.mouseY - dataObj.y;
-			
-			var event:DragDropEvent = new DragDropEvent(BluewolfEventConst.DRAG_DROP, false, true, dragNode);
-			this.dispatchEvent(event);
 		}
 	}
 }

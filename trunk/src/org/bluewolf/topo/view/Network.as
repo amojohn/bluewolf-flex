@@ -25,18 +25,12 @@ package org.bluewolf.topo.view {
 	
 	import com.adobe.utils.ArrayUtil;
 	
-	import flash.events.Event;
-	
-	import mx.controls.SWFLoader;
-	import mx.core.FlexGlobals;
 	import mx.events.DragEvent;
 	import mx.events.FlexEvent;
 	import mx.managers.DragManager;
-	import mx.styles.CSSStyleDeclaration;
-	import mx.styles.IStyleManager;
-	import mx.styles.IStyleManager2;
-	import mx.styles.StyleManager;
 	
+	import org.bluewolf.topo.event.BluewolfEventConst;
+	import org.bluewolf.topo.event.DragDropEvent;
 	import org.bluewolf.topo.model.ModelLocator;
 	
 	import spark.components.Group;
@@ -95,6 +89,8 @@ package org.bluewolf.topo.view {
 		 */
 		private function registerEvents():void {
 			this.addEventListener(FlexEvent.CREATION_COMPLETE, onInit);
+			this.addEventListener(DragEvent.DRAG_ENTER, onDragEnter);
+			this.addEventListener(DragEvent.DRAG_DROP, onDragDrop);
 		}
 		
 		/**
@@ -148,6 +144,22 @@ package org.bluewolf.topo.view {
 				layerProxy = layer;
 			}
 			return layerProxy;
+		}
+		
+		private function onDragEnter(e:DragEvent):void {
+			if (e.dragSource.hasFormat("node")) {
+				DragManager.acceptDragDrop(e.currentTarget as Network);
+			}
+		}
+		
+		private function onDragDrop(e:DragEvent):void {
+			var dataObj:Object = e.dragSource.dataForFormat("mouse") as Object;
+			var dragNode:Node = e.dragInitiator as Node;
+			dragNode.x = this.mouseX - dataObj.x;
+			dragNode.y = this.mouseY - dataObj.y;
+			
+			var event:DragDropEvent = new DragDropEvent(BluewolfEventConst.DRAG_DROP, false, true, dragNode);
+			this.dispatchEvent(event);
 		}
 		
 	}
