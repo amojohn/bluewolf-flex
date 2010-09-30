@@ -36,6 +36,8 @@ package org.bluewolf.topo.view {
 	import spark.components.Group;
 	
 	
+	[Event(name="DragDrop", type="org.bluewolf.topo.event.DragDropEvent")]
+	
 	/**
 	 * Network is a container which contains one or more layers.
 	 * 

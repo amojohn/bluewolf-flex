@@ -29,6 +29,6 @@ package org.bluewolf.topo.event {
 	 * @author	Rui
 	 */
 	public class BluewolfEventConst {
-		public static const DRAG_DROP:String = "Drag_Drop";
+		public static const DRAG_DROP:String = "DragDrop";
 	}
 }
