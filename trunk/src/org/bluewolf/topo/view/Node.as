@@ -83,7 +83,13 @@ package org.bluewolf.topo.view {
 		private function onIconComplete(e:Event):void {
 			this._icon.width = this._icon.contentWidth;
 			this._icon.height = this._icon.contentHeight;
+			this.width = this._icon.width + this._label.width;
+			if (this._icon.height > this._label.height)
+				this.height = this._icon.height;
+			else
+				this.height = this._label.height;
 			adjustPosition();
+			this.invalidateDisplayList();
 			this.dispatchEvent(e);
 		}
 		
