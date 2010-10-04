@@ -37,7 +37,7 @@ package org.bluewolf.topo.view {
 		
 		private var _srcNode:Node;
 		private var _dstNode:Node;
-		public var thickness:Number = 2;
+		private var _thickness:Number = 2;
 		
 		/**
 		 * Constructor for Link class
@@ -82,6 +82,22 @@ package org.bluewolf.topo.view {
 			return this._dstNode;
 		}
 		
+		/**
+		 * Thickness of this link
+		 * @param value link's thickness value
+		 */
+		public function set thickness(value:Number):void {
+			this._thickness = value;
+			drawLink();
+		}
+		
+		/**
+		 * Thickness of this link
+		 * @return link's thickness value
+		 */
+		public function get thickness():Number {
+			return this._thickness;
+		}
 		
 		/**
 		 * Draw a line between source and destination node in this Link object
@@ -92,7 +108,7 @@ package org.bluewolf.topo.view {
 				var sPoint:Point = _srcNode.getAlignPoint();
 				var dPoint:Point = _dstNode.getAlignPoint();
 				this.graphics.moveTo(sPoint.x, sPoint.y);
-				this.graphics.lineStyle(this.thickness, 0x00ff00);
+				this.graphics.lineStyle(this._thickness, 0x00ff00);
 				this.graphics.lineTo(dPoint.x, dPoint.y);
 			}
 			invalidateDisplayList();

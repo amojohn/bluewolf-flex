@@ -43,6 +43,7 @@ package org.bluewolf.topo.view {
 		
 		private var _nodes:Array;
 		private var _links:Array;
+		private var _groups:Array;
 		
 		/**
 		 * Construtor for Layer class
@@ -57,6 +58,7 @@ package org.bluewolf.topo.view {
 			
 			this._nodes = new Array();
 			this._links = new Array();
+			this._groups = new Array();
 		}
 		
 		/**
@@ -98,6 +100,7 @@ package org.bluewolf.topo.view {
 			this.addElement(node);
 			this._nodes.push(node);
 			node.addEventListener(MouseEvent.MOUSE_MOVE, onNodeMouseMove);
+			this.invalidateDisplayList();
 		}
 		
 		/**
@@ -112,6 +115,7 @@ package org.bluewolf.topo.view {
 				ArrayUtil.removeValueFromArray(_nodes, node);
 				isSuccess = true;
 			}
+			this.invalidateDisplayList();
 			return isSuccess;
 		}
 		
@@ -130,6 +134,7 @@ package org.bluewolf.topo.view {
 		public function addLink(link:Link):void {
 			this.addElementAt(link, 0);
 			this._links.push(link);
+			this.invalidateDisplayList();
 		}
 		
 		/**
@@ -142,6 +147,40 @@ package org.bluewolf.topo.view {
 			if (ArrayUtil.arrayContainsValue(_links, link)) {
 				this.removeElement(link);
 				ArrayUtil.removeValueFromArray(_links, link);
+				isSuccess = true;
+			}
+			this.invalidateDisplayList();
+			return isSuccess;
+		}
+		
+		/**
+		 * Get all groups in this layer
+		 * @return An array of all group objects
+		 */
+		public function get groups():Array {
+			return this._groups;
+		}
+		
+		/**
+		 * Add group object into this layer
+		 * @param group The group object to be added in this layer, must be an instance of Group class or Subclass.
+		 */
+		public function addGroup(group:org.bluewolf.topo.view.Group):void {
+			this.addElementAt(group, 0);
+			this._groups.push(group);
+			this.invalidateDisplayList();
+		}
+		
+		/**
+		 * Remove group object in this layer
+		 * @param group The group object to be removed in this layer
+		 * @return If remove operation succeed, return true, or return false
+		 */
+		public function removeGroup(group:org.bluewolf.topo.view.Group):Boolean {
+			var isSuccess:Boolean = false;
+			if (ArrayUtil.arrayContainsValue(_groups, group)) {
+				this.removeElement(group);
+				ArrayUtil.removeValueFromArray(_groups, group);
 				isSuccess = true;
 			}
 			return isSuccess;

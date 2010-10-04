@@ -25,9 +25,12 @@ package org.bluewolf.topo.view {
 	
 	import flash.geom.Point;
 	
+	import mx.collections.ArrayList;
+	import mx.controls.Alert;
 	import mx.core.UIComponent;
 	
 	import org.bluewolf.topo.interf.IDragableElement;
+	import org.bluewolf.topo.model.ModelLocator;
 	
 	/**
 	 * Group contains a group of topological objects, use different background colors
@@ -37,11 +40,23 @@ package org.bluewolf.topo.view {
 	 */
 	public class Group extends UIComponent implements IDragableElement {
 		
+		private var _nodes:ArrayList;
+		private var _topleft:Point;
+		private var _bottomright:Point;
+		private var model:ModelLocator = ModelLocator.getInstance();
+		
+		public var color:Number;
+		
 		/**
 		 * Constructor for Group class
 		 */
-		public function Group() {
+		public function Group(gColor:Number=0x0000ff) {
 			super();
+			
+			_nodes = new ArrayList();
+			_topleft = new Point(model.appWidth, model.appHeight);
+			_bottomright = new Point(0, 0);
+			this.color = gColor;
 		}
 		
 		/**
@@ -49,6 +64,56 @@ package org.bluewolf.topo.view {
 		 */
 		public final function getAlignPoint():Point {
 			return null;
+		}
+		
+		/**
+		 * The array of nodes in this group
+		 * @return An ArrayList contains all nodes in this group
+		 */
+		public function get nodes():ArrayList {
+			return this._nodes;
+		}
+		
+		/**
+		 * Add nodes into this group
+		 * @param nodes Node's objects array to be added in this group
+		 * @return The updated array list of nodes
+		 */
+		public function addNodes(arNodes:Array):ArrayList {
+			for each (var node:Node in arNodes) {
+				this._nodes.addItem(node);
+				if (node.x < _topleft.x)
+					_topleft.x = node.x - 5;
+				if (node.y < _topleft.y)
+					_topleft.y = node.y - 5;
+				if (node.x > _bottomright.x)
+					_bottomright.x = node.x + node.width + 5;
+				if (node.y > _bottomright.y)
+					_bottomright.y = node.y + node.height + 5;
+			}
+			drawGroup();
+			return this._nodes;
+		}
+		
+		/**
+		 * Remove nodes in this group
+		 * @param nodes Nodes to be removed in this group
+		 * @return The updated array list of nodes
+		 */
+		public function removeNodes(nodes:Array):ArrayList {
+			for each (var node:Node in nodes) {
+				this._nodes.removeItem(node);
+			}
+			return this._nodes;
+		}
+		
+		public function drawGroup():void {
+			this.graphics.clear();
+			this.graphics.moveTo(_topleft.x, _topleft.y);
+			this.graphics.lineStyle(2, color, 1);
+			this.graphics.beginFill(color, 0.5);
+			this.graphics.drawRect(_topleft.x, _topleft.y, _bottomright.x - _topleft.x, _bottomright.y - _topleft.y);
+			this.graphics.endFill();
 		}
 		
 	}
