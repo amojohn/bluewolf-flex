@@ -11,22 +11,6 @@
 	</target>
 	
 	<target name="compc" depends="properties">
-		<!--
-		<echo>${src.dir}</echo>
-		<fileset dir="${src.dir}" id="src.files">
-			<include name="**\**"/>
-		</fileset>
-		<pathconvert property="bluewolf-flex_classes" pathsep=" " dirsep="." refid="src.files">
-			<map from="\" to="/"/>
-			<map from="${src.dir}/" to=""/>
-			<mapper>
-				<chainedmapper>
-					<globmapper from="*.as" to="*"/>
-				</chainedmapper>
-			</mapper>
-		</pathconvert>
-		<echo>${bluewolf-flex_classes}</echo>
-		-->
 		<compc debug="${boolean.debug}" output="${bin.dir}/${library.name}.swc"
 				keep-generated-actionscript="false">
 			<source-path path-element="${src.dir}"/>
@@ -37,7 +21,6 @@
 		</compc>
 	</target>
 	
-	<!--
 	<target name="docs" depends="properties">
 		<exec executable="${asdoc}" spawn="no">
 			<arg line="-o ${doc.dir}"/>
@@ -46,5 +29,4 @@
 			<arg line="-window-title 'Bluewolf Flex 4 Library - ${library.name}"/>
 		</exec>
 	</target>
-	-->
 </project>
