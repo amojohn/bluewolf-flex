@@ -28,6 +28,7 @@ package org.bluewolf.topo.view {
 	import mx.collections.ArrayList;
 	import mx.controls.Alert;
 	import mx.core.UIComponent;
+	import mx.events.DragEvent;
 	
 	import org.bluewolf.topo.interf.IDragableElement;
 	import org.bluewolf.topo.model.ModelLocator;
@@ -43,6 +44,8 @@ package org.bluewolf.topo.view {
 		private var _nodes:ArrayList;
 		private var _topleft:Point;
 		private var _bottomright:Point;
+		private var realTL:Point;
+		private var realBR:Point;
 		private var model:ModelLocator = ModelLocator.getInstance();
 		
 		public var color:Number;
@@ -56,6 +59,8 @@ package org.bluewolf.topo.view {
 			_nodes = new ArrayList();
 			_topleft = new Point(model.appWidth, model.appHeight);
 			_bottomright = new Point(0, 0);
+			realTL = new Point(model.appWidth, model.appHeight);
+			realBR = new Point(0, 0);
 			this.color = gColor;
 		}
 		
@@ -82,14 +87,8 @@ package org.bluewolf.topo.view {
 		public function addNodes(arNodes:Array):ArrayList {
 			for each (var node:Node in arNodes) {
 				this._nodes.addItem(node);
-				if (node.x < _topleft.x)
-					_topleft.x = node.x - 5;
-				if (node.y < _topleft.y)
-					_topleft.y = node.y - 5;
-				if (node.x > _bottomright.x)
-					_bottomright.x = node.x + node.width + 5;
-				if (node.y > _bottomright.y)
-					_bottomright.y = node.y + node.height + 5;
+				node.addEventListener(DragEvent.DRAG_COMPLETE, onDragComplete);
+				this.setGroupRange(node);
 			}
 			drawGroup();
 			return this._nodes;
@@ -114,6 +113,40 @@ package org.bluewolf.topo.view {
 			this.graphics.beginFill(color, 0.5);
 			this.graphics.drawRect(_topleft.x, _topleft.y, _bottomright.x - _topleft.x, _bottomright.y - _topleft.y);
 			this.graphics.endFill();
+		}
+		
+		private function onDragComplete(e:DragEvent):void {
+			var node:Node = e.currentTarget as Node;
+			
+			_topleft = new Point(model.appWidth, model.appHeight);
+			_bottomright = new Point(0, 0);
+			realTL = new Point(model.appWidth, model.appHeight);
+			realBR = new Point(0, 0);
+			
+			var length:uint = nodes.length;
+			for (var i:uint = 0; i < length; i++) {
+				this.setGroupRange(nodes.getItemAt(i) as Node);
+			}
+			drawGroup();
+		}
+		
+		private function setGroupRange(node:Node):void {
+			if (node.x < realTL.x) {
+				_topleft.x = node.x - 5;
+				realTL.x = node.x;
+			}
+			if (node.y < realTL.y) {
+				_topleft.y = node.y - 5;
+				realTL.y = node.y;
+			}
+			if (node.x > realBR.x) {
+				_bottomright.x = node.x + node.width + 5;
+				realBR.x = node.x;
+			}
+			if (node.y > realBR.y) {
+				_bottomright.y = node.y + node.height + 5;
+				realBR.y = node.y;
+			}
 		}
 		
 	}
