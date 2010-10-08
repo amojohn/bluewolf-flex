@@ -28,6 +28,12 @@ package org.bluewolf.topo.view {
 	import mx.core.UIComponent;
 	import mx.events.DragEvent;
 	
+	import org.bluewolf.topo.event.BluewolfEventConst;
+	import org.bluewolf.topo.event.LayerRemoveNodeEvent;
+	import org.bluewolf.topo.event.RemoveLinkEvent;
+	
+	[Event(name="RemoveLink", type="org.bluewolf.topo.event.RemoveLinkEvent")]
+	
 	/**
 	 * Link object in topological diagram
 	 * 
@@ -53,6 +59,7 @@ package org.bluewolf.topo.view {
 		public function set source(value:Node):void {
 			this._srcNode = value;
 			this._srcNode.addEventListener(DragEvent.DRAG_COMPLETE, onDragComplete);
+			this._srcNode.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
 			drawLink();
 		}
 		
@@ -71,6 +78,7 @@ package org.bluewolf.topo.view {
 		public function set destination(value:Node):void {
 			this._dstNode = value;
 			this._dstNode.addEventListener(DragEvent.DRAG_COMPLETE, onDragComplete);
+			this._dstNode.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
 			drawLink();
 		}
 		
@@ -120,6 +128,12 @@ package org.bluewolf.topo.view {
 		 */
 		private function onDragComplete(e:DragEvent):void {
 			drawLink();
+		}
+		
+		private function onLayerRemoveNode(e:LayerRemoveNodeEvent):void {
+			this.graphics.clear();
+			var event:RemoveLinkEvent = new RemoveLinkEvent(BluewolfEventConst.REMOVE_LINK, false, true, this);
+			this.dispatchEvent(event);
 		}
 		
 	}

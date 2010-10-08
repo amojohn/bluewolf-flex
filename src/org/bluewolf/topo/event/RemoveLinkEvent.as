@@ -23,14 +23,36 @@ THE SOFTWARE.
 
 package org.bluewolf.topo.event {
 	
+	import flash.events.Event;
+	
+	import org.bluewolf.topo.view.Link;
+	
 	/**
-	 * BluewolfEvent class defines all of the constants name of events in bluewolf flex components
+	 * Event to be dispatched after removing link in layer
 	 * 
 	 * @author	Rui
 	 */
-	public class BluewolfEventConst {
-		public static const DRAG_DROP:String = "DragDrop";
-		public static const LAYER_REMOVE_NODE:String = "LayerRemoveNode";
-		public static const REMOVE_LINK:String = "RemoveLink";
+	public class RemoveLinkEvent extends Event {
+		
+		private var _link:Link = link;
+		
+		public function RemoveLinkEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false, rLink:Link=null) {
+			super(type, bubbles, cancelable);
+			
+			this._link = rLink;
+		}
+		
+		override public function clone():Event {
+			return new RemoveLinkEvent(type, bubbles, cancelable, _link);
+		}
+		
+		public function set link(value:Link):void {
+			this._link = value;
+		}
+		
+		public function get link():Link {
+			return this._link;
+		}
+		
 	}
 }

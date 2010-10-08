@@ -30,10 +30,13 @@ package org.bluewolf.topo.view {
 	import mx.core.DragSource;
 	import mx.managers.DragManager;
 	
+	import org.bluewolf.topo.event.BluewolfEventConst;
 	import org.bluewolf.topo.event.DragDropEvent;
+	import org.bluewolf.topo.event.LayerRemoveNodeEvent;
+	import org.bluewolf.topo.event.RemoveLinkEvent;
 	
 	import spark.components.Group;
-	
+		
 	/**
 	 * Layer is used to create different layers in network container, it can contains nodes, links and other components
 	 * 
@@ -111,6 +114,10 @@ package org.bluewolf.topo.view {
 		public function removeNode(node:Node):Boolean {
 			var isSuccess:Boolean = false;
 			if (ArrayUtil.arrayContainsValue(_nodes, node)) {
+				var event:LayerRemoveNodeEvent = new LayerRemoveNodeEvent(BluewolfEventConst.LAYER_REMOVE_NODE,
+					false, true, node);
+				node.dispatchEvent(event);
+				
 				this.removeElement(node);
 				ArrayUtil.removeValueFromArray(_nodes, node);
 				isSuccess = true;
@@ -133,6 +140,7 @@ package org.bluewolf.topo.view {
 		 */
 		public function addLink(link:Link):void {
 			this.addElementAt(link, 0);
+			link.addEventListener(BluewolfEventConst.REMOVE_LINK, onRemoveLink);
 			this._links.push(link);
 			this.invalidateDisplayList();
 		}
@@ -192,6 +200,10 @@ package org.bluewolf.topo.view {
 			dataSource.addData(indicator, "node");
 			dataSource.addData({x:indicator.mouseX, y:indicator.mouseY}, "mouse");
 			DragManager.doDrag(indicator, dataSource, e);
+		}
+		
+		private function onRemoveLink(e:RemoveLinkEvent):void {
+			this.removeLink(e.link);
 		}
 	}
 }

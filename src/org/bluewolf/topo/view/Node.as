@@ -35,6 +35,8 @@ package org.bluewolf.topo.view {
 	import spark.components.BorderContainer;
 	import spark.layouts.HorizontalLayout;
 	
+	[Event(name="LayerRemoveNode", type="org.bluewolf.topo.event.LayerRemoveNodeEvent")]
+	
 	/**
 	 * Node object in topological diagram, consist with icon(optional) and name label
 	 * 
