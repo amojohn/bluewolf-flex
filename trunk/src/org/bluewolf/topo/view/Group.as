@@ -30,6 +30,8 @@ package org.bluewolf.topo.view {
 	import mx.core.UIComponent;
 	import mx.events.DragEvent;
 	
+	import org.bluewolf.topo.event.BluewolfEventConst;
+	import org.bluewolf.topo.event.LayerRemoveNodeEvent;
 	import org.bluewolf.topo.interf.IDragableElement;
 	import org.bluewolf.topo.model.ModelLocator;
 	
@@ -57,12 +59,11 @@ package org.bluewolf.topo.view {
 			super();
 			
 			_nodes = new ArrayList();
-			_topleft = new Point(model.appWidth, model.appHeight);
-			_bottomright = new Point(0, 0);
-			realTL = new Point(model.appWidth, model.appHeight);
-			realBR = new Point(0, 0);
+			resetGroupArea();
 			this.color = gColor;
 		}
+		
+		private function registerEvents():void {}
 		
 		/**
 		 * Implemention of IDragableElement getAlignPoint method
@@ -88,6 +89,7 @@ package org.bluewolf.topo.view {
 			for each (var node:Node in arNodes) {
 				this._nodes.addItem(node);
 				node.addEventListener(DragEvent.DRAG_COMPLETE, onDragComplete);
+				node.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
 				this.setGroupRange(node);
 			}
 			drawGroup();
@@ -99,13 +101,19 @@ package org.bluewolf.topo.view {
 		 * @param nodes Nodes to be removed in this group
 		 * @return The updated array list of nodes
 		 */
-		public function removeNodes(nodes:Array):ArrayList {
-			for each (var node:Node in nodes) {
+		public function removeNodes(arNodes:Array):ArrayList {
+			for each (var node:Node in arNodes) {
 				this._nodes.removeItem(node);
 			}
+			
+			redrawGroup();
+			
 			return this._nodes;
 		}
 		
+		/**
+		 * Draw a colored rectangle which represents a group according to the _topleft and _bottomright coordinates.
+		 */ 
 		public function drawGroup():void {
 			this.graphics.clear();
 			this.graphics.moveTo(_topleft.x, _topleft.y);
@@ -118,10 +126,21 @@ package org.bluewolf.topo.view {
 		private function onDragComplete(e:DragEvent):void {
 			var node:Node = e.currentTarget as Node;
 			
+			redrawGroup();
+		}
+		
+		/**
+		 * Reinitialize the area of this Group
+		 */
+		private function resetGroupArea():void {
 			_topleft = new Point(model.appWidth, model.appHeight);
 			_bottomright = new Point(0, 0);
 			realTL = new Point(model.appWidth, model.appHeight);
 			realBR = new Point(0, 0);
+		}
+		
+		public function redrawGroup():void {
+			resetGroupArea();
 			
 			var length:uint = nodes.length;
 			for (var i:uint = 0; i < length; i++) {
@@ -130,6 +149,10 @@ package org.bluewolf.topo.view {
 			drawGroup();
 		}
 		
+		/**
+		 * Computing and setting the area of this group
+		 * @param node The input node to be used to computing
+		 */
 		private function setGroupRange(node:Node):void {
 			if (node.x < realTL.x) {
 				_topleft.x = node.x - 5;
@@ -147,6 +170,10 @@ package org.bluewolf.topo.view {
 				_bottomright.y = node.y + node.height + 5;
 				realBR.y = node.y;
 			}
+		}
+		
+		private function onLayerRemoveNode(e:LayerRemoveNodeEvent):void {
+			this.removeNodes([e.node]);
 		}
 		
 	}

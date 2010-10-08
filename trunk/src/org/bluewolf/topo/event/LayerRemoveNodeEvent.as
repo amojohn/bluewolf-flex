@@ -23,14 +23,37 @@ THE SOFTWARE.
 
 package org.bluewolf.topo.event {
 	
+	import flash.events.Event;
+	
+	import org.bluewolf.topo.view.Node;
+	
 	/**
-	 * BluewolfEvent class defines all of the constants name of events in bluewolf flex components
+	 * Event to be dispatched after removing node in layer
 	 * 
 	 * @author	Rui
 	 */
-	public class BluewolfEventConst {
-		public static const DRAG_DROP:String = "DragDrop";
-		public static const LAYER_REMOVE_NODE:String = "LayerRemoveNode";
-		public static const REMOVE_LINK:String = "RemoveLink";
+	public class LayerRemoveNodeEvent extends Event {
+		
+		private var _node:Node
+		
+		public function LayerRemoveNodeEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false,
+											 rNode:Node=null) {
+			super(type, bubbles, cancelable);
+			
+			this._node = rNode;
+		}
+		
+		override public function clone():Event {
+			return new LayerRemoveNodeEvent(type, bubbles, cancelable, _node);
+		}
+		
+		public function set node(value:Node):void {
+			this._node = value;
+		}
+		
+		public function get node():Node {
+			return this._node;
+		}
+		
 	}
 }
