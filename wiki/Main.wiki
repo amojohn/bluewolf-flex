@@ -9,8 +9,8 @@ This is a library project for drawing topology graphics. I created this project 
 
 Functions in 0.2
 <br/>
-<br/># Add nodes and links in diagrams
-<br/># 2.Drag and drop nodes
-<br/># 3.Layout objects in different layers, show several layers in one diagram
-<br/># 4.Group objects, show grouped objects in different colors’ borders
-<br/># 5.Customize node's icon
+<br/>1.Add nodes and links in diagrams
+<br/>2.Drag and drop nodes
+<br/>3.Layout objects in different layers, show several layers in one diagram
+<br/>4.Group objects, show grouped objects in different colors’ borders
+<br/>5.Customize node's icon
