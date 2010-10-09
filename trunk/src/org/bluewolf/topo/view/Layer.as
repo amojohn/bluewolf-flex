@@ -34,6 +34,7 @@ package org.bluewolf.topo.view {
 	import org.bluewolf.topo.event.DragDropEvent;
 	import org.bluewolf.topo.event.LayerRemoveNodeEvent;
 	import org.bluewolf.topo.event.RemoveLinkEvent;
+	import org.bluewolf.topo.model.ModelLocator;
 	
 	import spark.components.Group;
 		
@@ -47,6 +48,7 @@ package org.bluewolf.topo.view {
 		private var _nodes:Array;
 		private var _links:Array;
 		private var _groups:Array;
+		private var model:ModelLocator = ModelLocator.getInstance();
 		
 		/**
 		 * Construtor for Layer class
@@ -56,8 +58,9 @@ package org.bluewolf.topo.view {
 			
 			this.initStyle();
 			
-			this.percentWidth = 100;
-			this.percentHeight = 100;
+			this.percentWidth = this.percentHeight = 100;
+			this.width = model.appWidth;
+			this.height = model.appHeight;
 			
 			this._nodes = new Array();
 			this._links = new Array();
