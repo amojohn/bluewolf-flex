@@ -25,6 +25,7 @@ package org.bluewolf.topo.view {
 	
 	import com.adobe.utils.ArrayUtil;
 	
+	import mx.effects.Zoom;
 	import mx.events.DragEvent;
 	import mx.events.FlexEvent;
 	import mx.managers.DragManager;
@@ -46,6 +47,8 @@ package org.bluewolf.topo.view {
 	public class Network extends Group {
 		
 		private var _layers:Array = new Array();
+		private var _zoomCoefficient:Number = 1;
+		private var _zoom:Zoom;
 		private var model:ModelLocator = ModelLocator.getInstance();
 		
 		/**
@@ -102,6 +105,8 @@ package org.bluewolf.topo.view {
 		private function onInit(e:FlexEvent):void {
 			model.appWidth = this.width;
 			model.appHeight = this.height;
+			
+			_zoom = new Zoom(this);
 		}
 		
 		/**
@@ -162,6 +167,13 @@ package org.bluewolf.topo.view {
 			
 			var event:DragDropEvent = new DragDropEvent(BluewolfEventConst.DRAG_DROP, false, true, dragNode);
 			this.dispatchEvent(event);
+		}
+		
+		public function zoom(coefficient:Number):void {
+			_zoom.zoomWidthFrom = _zoom.zoomHeightFrom = _zoomCoefficient;
+			_zoom.zoomWidthTo = _zoom.zoomHeightTo = coefficient;
+			_zoom.play();
+			_zoomCoefficient = coefficient;
 		}
 		
 	}
