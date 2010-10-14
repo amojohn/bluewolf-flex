@@ -1,0 +1,10 @@
+#summary Spot news of bluewolf-flex
+
+= Introduction =
+
+This page will log some news and latest status
+
+
+= Details =
+
+2010/10/14    Upload a demo application in downloads page
