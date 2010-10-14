@@ -25,6 +25,9 @@ package org.bluewolf.topo.view {
 	
 	import com.adobe.utils.ArrayUtil;
 	
+	import flash.events.MouseEvent;
+	import flash.geom.Point;
+	
 	import mx.effects.Zoom;
 	import mx.events.DragEvent;
 	import mx.events.FlexEvent;
@@ -49,6 +52,9 @@ package org.bluewolf.topo.view {
 		private var _layers:Array = new Array();
 		private var _zoomCoefficient:Number = 1;
 		private var _zoom:Zoom;
+		public var selectedLayer:Layer = null;
+		private var _isSelectRect:Boolean = false;
+		private var _selectionRect:SelectionRect;
 		private var model:ModelLocator = ModelLocator.getInstance();
 		
 		/**
@@ -96,6 +102,9 @@ package org.bluewolf.topo.view {
 			this.addEventListener(FlexEvent.CREATION_COMPLETE, onInit);
 			this.addEventListener(DragEvent.DRAG_ENTER, onDragEnter);
 			this.addEventListener(DragEvent.DRAG_DROP, onDragDrop);
+			this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			this.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			this.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 		}
 		
 		/**
@@ -107,6 +116,8 @@ package org.bluewolf.topo.view {
 			model.appHeight = this.height;
 			
 			_zoom = new Zoom(this);
+			_selectionRect = new SelectionRect();
+			this.addElement(_selectionRect);
 		}
 		
 		/**
@@ -121,6 +132,7 @@ package org.bluewolf.topo.view {
 			layer.y = 0;
 			this.addElement(layer);
 			this._layers.push(layer);
+			this.selectedLayer = layer;
 			return layers.length - 1;
 		}
 		
@@ -145,17 +157,28 @@ package org.bluewolf.topo.view {
 		 * @return If the network contains the given layer, return the selected layer, otherwise, return null
 		 */
 		public function selectLayer(layer:Layer):Layer {
-			var layerProxy:Layer = null;
 			if (ArrayUtil.arrayContainsValue(layers, layer)) {
 				layer.depth = 99;
-				layerProxy = layer;
+				selectedLayer = layer;
 			}
-			return layerProxy;
+			return selectedLayer;
+		}
+		
+		/**
+		 * Zoom the topological diagram size to the given coefficient
+		 * @param coefficient The value of new size coefficient
+		 */
+		public function zoom(coefficient:Number):void {
+			_zoom.zoomWidthFrom = _zoom.zoomHeightFrom = _zoomCoefficient;
+			_zoom.zoomWidthTo = _zoom.zoomHeightTo = coefficient;
+			_zoom.play();
+			_zoomCoefficient = coefficient;
 		}
 		
 		private function onDragEnter(e:DragEvent):void {
 			if (e.dragSource.hasFormat("node")) {
 				DragManager.acceptDragDrop(e.currentTarget as Network);
+				_isSelectRect = false;
 			}
 		}
 		
@@ -169,11 +192,27 @@ package org.bluewolf.topo.view {
 			this.dispatchEvent(event);
 		}
 		
-		public function zoom(coefficient:Number):void {
-			_zoom.zoomWidthFrom = _zoom.zoomHeightFrom = _zoomCoefficient;
-			_zoom.zoomWidthTo = _zoom.zoomHeightTo = coefficient;
-			_zoom.play();
-			_zoomCoefficient = coefficient;
+		private function onMouseDown(e:MouseEvent):void {
+			_isSelectRect = true;
+			_selectionRect.start = new Point(e.localX, e.localY);
+		}
+		
+		private function onMouseMove(e:MouseEvent):void {
+			if (_isSelectRect) {
+				_selectionRect.end = new Point(e.localX, e.localY);
+			}
+		}
+		
+		private function onMouseUp(e:MouseEvent):void {
+			if (_isSelectRect) {
+				_selectionRect.clearRect();
+				for each (var node:Node in selectedLayer.nodes) {
+					if (_selectionRect.isNodeInRect(node.x, node.y)) {
+						trace(node.label);
+					}
+				}
+			}
+			_isSelectRect = false;
 		}
 		
 	}

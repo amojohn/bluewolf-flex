@@ -117,7 +117,7 @@ package org.bluewolf.topo.view {
 		public function drawGroup():void {
 			this.graphics.clear();
 			this.graphics.moveTo(_topleft.x, _topleft.y);
-			this.graphics.lineStyle(2, color, 1);
+			this.graphics.lineStyle(1, color, 0.5);
 			this.graphics.beginFill(color, 0.1);
 			this.graphics.drawRect(_topleft.x, _topleft.y, _bottomright.x - _topleft.x, _bottomright.y - _topleft.y);
 			this.graphics.endFill();

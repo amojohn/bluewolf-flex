@@ -105,7 +105,7 @@ package org.bluewolf.topo.view {
 		public function addNode(node:Node):void {
 			this.addElement(node);
 			this._nodes.push(node);
-			node.addEventListener(MouseEvent.MOUSE_MOVE, onNodeMouseMove);
+			node.addEventListener(MouseEvent.MOUSE_DOWN, onNodeMouseDown);
 			this.invalidateDisplayList();
 		}
 		
@@ -197,7 +197,7 @@ package org.bluewolf.topo.view {
 			return isSuccess;
 		}
 		
-		private function onNodeMouseMove(e:MouseEvent):void {
+		private function onNodeMouseDown(e:MouseEvent):void {
 			var indicator:Node = e.currentTarget as Node;
 			var dataSource:DragSource = new DragSource();
 			dataSource.addData(indicator, "node");
