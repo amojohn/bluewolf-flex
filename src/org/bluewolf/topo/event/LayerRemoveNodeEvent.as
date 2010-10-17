@@ -36,6 +36,9 @@ package org.bluewolf.topo.event {
 		
 		private var _node:Node
 		
+		/**
+		 * Constructor for LayerRemoveNodeEvent class
+		 */ 
 		public function LayerRemoveNodeEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false,
 											 rNode:Node=null) {
 			super(type, bubbles, cancelable);
@@ -47,10 +50,16 @@ package org.bluewolf.topo.event {
 			return new LayerRemoveNodeEvent(type, bubbles, cancelable, _node);
 		}
 		
+		/**
+		 * The node which was removed in the layer
+		 */
 		public function set node(value:Node):void {
 			this._node = value;
 		}
 		
+		/**
+		 * The node which was removed in the layer
+		 */
 		public function get node():Node {
 			return this._node;
 		}

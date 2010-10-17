@@ -132,8 +132,6 @@ package org.bluewolf.topo.view {
 			var point:Point = new Point(this.x, this.y);
 			point.x += _icon.width / 2;
 			point.y += _icon.height / 2;
-			point.x = int(point.x / 10) * 10;
-			point.y = int(point.y / 10) * 10;
 			return point;
 		}
 		

@@ -139,6 +139,9 @@ package org.bluewolf.topo.view {
 			realBR = new Point(0, 0);
 		}
 		
+		/**
+		 * Resize group area and redraw the border
+		 */
 		public function redrawGroup():void {
 			resetGroupArea();
 			

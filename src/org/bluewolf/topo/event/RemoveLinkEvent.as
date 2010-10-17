@@ -36,6 +36,9 @@ package org.bluewolf.topo.event {
 		
 		private var _link:Link = link;
 		
+		/**
+		 * Constructor for RemoveLinkEvent class
+		 */
 		public function RemoveLinkEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false, rLink:Link=null) {
 			super(type, bubbles, cancelable);
 			
@@ -46,10 +49,16 @@ package org.bluewolf.topo.event {
 			return new RemoveLinkEvent(type, bubbles, cancelable, _link);
 		}
 		
+		/**
+		 * The link was removed in layer
+		 */
 		public function set link(value:Link):void {
 			this._link = value;
 		}
 		
+		/**
+		 * The link was removed in layer
+		 */
 		public function get link():Link {
 			return this._link;
 		}
