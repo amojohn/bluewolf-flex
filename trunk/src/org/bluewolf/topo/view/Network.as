@@ -55,6 +55,7 @@ package org.bluewolf.topo.view {
 		public var selectedLayer:Layer = null;
 		private var _isSelectRect:Boolean = false;
 		private var _selectionRect:SelectionRect;
+		private var _selectedNodes:Array = new Array();
 		private var model:ModelLocator = ModelLocator.getInstance();
 		
 		/**
@@ -193,6 +194,7 @@ package org.bluewolf.topo.view {
 		}
 		
 		private function onMouseDown(e:MouseEvent):void {
+			_selectedNodes = new Array();
 			_isSelectRect = true;
 			_selectionRect.start = new Point(e.localX, e.localY);
 		}
@@ -207,12 +209,22 @@ package org.bluewolf.topo.view {
 			if (_isSelectRect) {
 				_selectionRect.clearRect();
 				for each (var node:Node in selectedLayer.nodes) {
+					node.setStyle("dropShadowVisible", false);
 					if (_selectionRect.isNodeInRect(node.x, node.y)) {
-						trace(node.label);
+						node.setStyle("dropShadowVisible", true);
+						_selectedNodes.push(node);
 					}
 				}
 			}
 			_isSelectRect = false;
+		}
+		
+		/**
+		 * All selected nodes by mouse in the network
+		 * @return An array of all selected nodes
+		 */
+		public function get selectedNodes():Array {
+			return this._selectedNodes;
 		}
 		
 	}

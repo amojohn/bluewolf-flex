@@ -40,6 +40,9 @@ package org.bluewolf.topo.event {
 		private var _relativeX:Number = 0;
 		private var _relativeY:Number = 0;
 		
+		/**
+		 * Constructor for DragDropEvent class
+		 */
 		public function DragDropEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=true,
 										node:Node=null) {
 			super(type, bubbles, cancelable);
@@ -52,14 +55,26 @@ package org.bluewolf.topo.event {
 			return new DragDropEvent(type, bubbles, cancelable, _node);
 		}
 		
+		/**
+		 * The dragged node which dispatched the DragDropEvent
+		 * @return The dragged node
+		 */
 		public function get node():Node {
 			return this._node;
 		}
 		
+		/**
+		 * The value of relative x coordinate
+		 * @return A number value of relative x
+		 */
 		public function get relativeX():Number {
 			return this._relativeX;
 		}
 		
+		/**
+		 * The value of relative y coordinate
+		 * @return A number value of relative y
+		 */
 		public function get relativeY():Number {
 			return this._relativeY;
 		}
