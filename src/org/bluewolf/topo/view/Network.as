@@ -53,7 +53,6 @@ package org.bluewolf.topo.view {
 		private var _zoomCoefficient:Number = 1;
 		private var _zoom:Zoom;
 		public var selectedLayer:Layer = null;
-		private var _isSelectRect:Boolean = false;
 		private var _selectionRect:SelectionRect;
 		private var _selectedNodes:Array = new Array();
 		private var model:ModelLocator = ModelLocator.getInstance();
@@ -179,7 +178,6 @@ package org.bluewolf.topo.view {
 		private function onDragEnter(e:DragEvent):void {
 			if (e.dragSource.hasFormat("node")) {
 				DragManager.acceptDragDrop(e.currentTarget as Network);
-				_isSelectRect = false;
 			}
 		}
 		
@@ -195,18 +193,19 @@ package org.bluewolf.topo.view {
 		
 		private function onMouseDown(e:MouseEvent):void {
 			_selectedNodes = new Array();
-			_isSelectRect = true;
+			model.isSelectRect = true;
 			_selectionRect.start = new Point(e.localX, e.localY);
 		}
 		
 		private function onMouseMove(e:MouseEvent):void {
-			if (_isSelectRect) {
+			if (model.isSelectRect) {
 				_selectionRect.end = new Point(e.localX, e.localY);
 			}
 		}
 		
 		private function onMouseUp(e:MouseEvent):void {
-			if (_isSelectRect) {
+			if (model.isSelectRect) {
+				_selectionRect.end = new Point(e.localX, e.localY);
 				_selectionRect.clearRect();
 				for each (var node:Node in selectedLayer.nodes) {
 					node.setStyle("dropShadowVisible", false);
@@ -216,7 +215,7 @@ package org.bluewolf.topo.view {
 					}
 				}
 			}
-			_isSelectRect = false;
+			model.isSelectRect = false;
 		}
 		
 		/**
