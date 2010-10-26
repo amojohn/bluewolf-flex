@@ -43,9 +43,10 @@ package org.bluewolf.topo.model {
 		}
 		
 		/* Global Configuration */
-		public var autoAlign:Boolean = false;		// autoAlign property of network object
-		public var appWidth:Number = 0;			// Width of network object
+		public var autoAlign:Boolean = false;		// AutoAlign property of network object
+		public var appWidth:Number = 0;				// Width of network object
 		public var appHeight:Number = 0;			// Height of network object
+		public var isSelectRect:Boolean = false;	// Flag to check if user use mouse to select an area
 	}
 }
 

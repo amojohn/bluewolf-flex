@@ -198,11 +198,16 @@ package org.bluewolf.topo.view {
 		}
 		
 		private function onNodeMouseDown(e:MouseEvent):void {
+			e.stopPropagation();
 			var indicator:Node = e.currentTarget as Node;
-			var dataSource:DragSource = new DragSource();
-			dataSource.addData(indicator, "node");
-			dataSource.addData({x:indicator.mouseX, y:indicator.mouseY}, "mouse");
-			DragManager.doDrag(indicator, dataSource, e);
+			if (e.ctrlKey) {
+				indicator.setStyle("dropShadowVisible", !indicator.getStyle("dropShadowVisible"));
+			} else {
+				var dataSource:DragSource = new DragSource();
+				dataSource.addData(indicator, "node");
+				dataSource.addData({x:indicator.mouseX, y:indicator.mouseY}, "mouse");
+				DragManager.doDrag(indicator, dataSource, e);
+			}
 		}
 		
 		private function onRemoveLink(e:RemoveLinkEvent):void {
