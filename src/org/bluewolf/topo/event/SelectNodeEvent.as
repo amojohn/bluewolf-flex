@@ -23,15 +23,49 @@ THE SOFTWARE.
 
 package org.bluewolf.topo.event {
 	
+	import flash.events.Event;
+	
+	import org.bluewolf.topo.view.Node;
+	
+	
 	/**
-	 * BluewolfEvent class defines all of the constants name of events in bluewolf flex components
+	 * Event to be dispatched after select or unselect when click the node
 	 * 
 	 * @author	Rui
 	 */
-	public class BluewolfEventConst {
-		public static const DRAG_DROP:String = "DragDrop";
-		public static const LAYER_REMOVE_NODE:String = "LayerRemoveNode";
-		public static const REMOVE_LINK:String = "RemoveLink";
-		public static const SELECT_NODE:String = "SelectNode";
+	public class SelectNodeEvent extends Event {
+		
+		private var _node:Node;
+		private var _isSelect:Boolean = false;
+		
+		/**
+		 * Constructor for SelectNodeEvent class
+		 */
+		public function SelectNodeEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false,
+										oNode:Node=null, bIsSelect:Boolean=false) {
+			super(type, bubbles, cancelable);
+			this._node = oNode;
+			this._isSelect = bIsSelect;
+		}
+		
+		override public function clone():Event {
+			return new SelectNodeEvent(type, bubbles, cancelable, _node, _isSelect);
+		}
+		
+		public function set node(value:Node):void {
+			this._node = value;
+		}
+		
+		public function get node():Node {
+			return this._node;
+		}
+		
+		public function set isSelect(value:Boolean):void {
+			this._isSelect = value;
+		}
+		
+		public function get isSelect():Boolean {
+			return this._isSelect;
+		}
 	}
 }

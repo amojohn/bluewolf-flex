@@ -27,6 +27,7 @@ package org.bluewolf.topo.view {
 	
 	import flash.events.MouseEvent;
 	
+	import mx.controls.Alert;
 	import mx.core.DragSource;
 	import mx.managers.DragManager;
 	
@@ -34,6 +35,7 @@ package org.bluewolf.topo.view {
 	import org.bluewolf.topo.event.DragDropEvent;
 	import org.bluewolf.topo.event.LayerRemoveNodeEvent;
 	import org.bluewolf.topo.event.RemoveLinkEvent;
+	import org.bluewolf.topo.event.SelectNodeEvent;
 	import org.bluewolf.topo.model.ModelLocator;
 	
 	import spark.components.Group;
@@ -202,6 +204,8 @@ package org.bluewolf.topo.view {
 			var indicator:Node = e.currentTarget as Node;
 			if (e.ctrlKey) {
 				indicator.setStyle("dropShadowVisible", !indicator.getStyle("dropShadowVisible"));
+				var event:SelectNodeEvent = new SelectNodeEvent(BluewolfEventConst.SELECT_NODE, false, true, indicator, indicator.getStyle("dropShadowVisible"));
+				this.dispatchEvent(event);
 			} else {
 				var dataSource:DragSource = new DragSource();
 				dataSource.addData(indicator, "node");
