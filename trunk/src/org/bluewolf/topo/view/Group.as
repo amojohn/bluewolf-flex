@@ -23,10 +23,13 @@ THE SOFTWARE.
 
 package org.bluewolf.topo.view {
 	
+	import com.adobe.utils.ArrayUtil;
+	
 	import flash.geom.Point;
 	
 	import mx.collections.ArrayList;
 	import mx.core.UIComponent;
+	import mx.events.MoveEvent;
 	
 	import org.bluewolf.topo.event.BluewolfEventConst;
 	import org.bluewolf.topo.event.DragDropEvent;
@@ -57,12 +60,15 @@ package org.bluewolf.topo.view {
 		public function Group(gColor:Number=0x0000ff) {
 			super();
 			
+			registerEvents();
+			
 			_nodes = new ArrayList();
 			resetGroupArea();
 			this.color = gColor;
 		}
 		
-		private function registerEvents():void {}
+		private function registerEvents():void {
+		}
 		
 		/**
 		 * Implemention of IDragableElement getAlignPoint method
@@ -87,8 +93,8 @@ package org.bluewolf.topo.view {
 		public function addNodes(arNodes:Array):ArrayList {
 			for each (var node:Node in arNodes) {
 				this._nodes.addItem(node);
-				node.addEventListener(BluewolfEventConst.DRAG_DROP, onDragComplete);
 				node.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
+				node.addEventListener(MoveEvent.MOVE, onMove);
 				this.setGroupRange(node);
 			}
 			drawGroup();
@@ -120,12 +126,6 @@ package org.bluewolf.topo.view {
 			this.graphics.beginFill(color, 0.1);
 			this.graphics.drawRect(_topleft.x, _topleft.y, _bottomright.x - _topleft.x, _bottomright.y - _topleft.y);
 			this.graphics.endFill();
-		}
-		
-		private function onDragComplete(e:DragDropEvent):void {
-			var node:Node = e.currentTarget as Node;
-			
-			redrawGroup();
 		}
 		
 		/**
@@ -176,6 +176,10 @@ package org.bluewolf.topo.view {
 		
 		private function onLayerRemoveNode(e:LayerRemoveNodeEvent):void {
 			this.removeNodes([e.node]);
+		}
+		
+		private function onMove(e:MoveEvent):void {
+			redrawGroup();
 		}
 		
 	}
