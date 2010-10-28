@@ -24,6 +24,7 @@ THE SOFTWARE.
 package org.bluewolf.topo.event {
 	
 	import flash.events.Event;
+	import flash.geom.Point;
 	
 	import org.bluewolf.topo.model.ModelLocator;
 	import org.bluewolf.topo.view.Node;
@@ -39,16 +40,18 @@ package org.bluewolf.topo.event {
 		private var _node:Node;
 		private var _relativeX:Number = 0;
 		private var _relativeY:Number = 0;
+		private var _startPoint:Point = new Point();
 		
 		/**
 		 * Constructor for DragDropEvent class
 		 */
 		public function DragDropEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=true,
-										node:Node=null) {
+										node:Node=null, startPoint:Point=null) {
 			super(type, bubbles, cancelable);
 			this._node = node;
 			this._relativeX = Number(Number(node.x / model.appWidth).toFixed(3));
 			this._relativeY = Number(Number(node.y / model.appHeight).toFixed(3));
+			this._startPoint = startPoint;
 		}
 		
 		override public function clone():Event {
@@ -77,6 +80,10 @@ package org.bluewolf.topo.event {
 		 */
 		public function get relativeY():Number {
 			return this._relativeY;
+		}
+		
+		public function get startPoint():Point {
+			return this._startPoint;
 		}
 		
 	}

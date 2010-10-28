@@ -23,12 +23,16 @@ THE SOFTWARE.
 
 package org.bluewolf.topo.view {
 	
+	import com.adobe.utils.ArrayUtil;
+	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
 	import mx.controls.Image;
 	import mx.controls.Text;
+	import mx.effects.Move;
+	import mx.events.EffectEvent;
 	
 	import org.bluewolf.topo.event.BluewolfEventConst;
 	import org.bluewolf.topo.event.DragDropEvent;
@@ -56,6 +60,8 @@ package org.bluewolf.topo.view {
 		private var _relativeX:Number = 0;
 		private var _relativeY:Number = 0;
 		private var _isDragging:Boolean = false;
+		public var eMove:Move;
+		public var dragStartPoint:Point;
 		
 		/**
 		 * Constructor for Node class
@@ -64,6 +70,8 @@ package org.bluewolf.topo.view {
 			super();
 			
 			this.minWidth = this.minHeight = 0;
+			eMove = new Move(this);
+			eMove.duration = 200;
 			
 			initStyle();
 			registerEvents();
@@ -90,6 +98,7 @@ package org.bluewolf.topo.view {
 			this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			this.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			this.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+			eMove.addEventListener(EffectEvent.EFFECT_END, onMoveEnd);
 		}
 		
 		private function onIconComplete(e:Event):void {
@@ -115,6 +124,7 @@ package org.bluewolf.topo.view {
 			var event:SelectNodeEvent = new SelectNodeEvent(
 				BluewolfEventConst.SELECT_NODE, true, true, this, this.getStyle("dropShadowVisible"), e.ctrlKey);
 			this.dispatchEvent(event);
+			this.dragStartPoint = new Point(this.x, this.y);
 			this.startDrag();
 			_isDragging = true;
 		}
@@ -123,7 +133,7 @@ package org.bluewolf.topo.view {
 			this.stopDrag();
 			_isDragging = false;
 			
-			var event:DragDropEvent = new DragDropEvent(BluewolfEventConst.DRAG_DROP, true, true, this);
+			var event:DragDropEvent = new DragDropEvent(BluewolfEventConst.DRAG_DROP, true, true, this, dragStartPoint);
 			this.dispatchEvent(event);
 		}
 		
@@ -132,6 +142,12 @@ package org.bluewolf.topo.view {
 				var event:NodeMoveEvent = new NodeMoveEvent(BluewolfEventConst.NODE_MOVE, false, true, this);
 				this.dispatchEvent(event);
 			}
+		}
+		
+		private function onMoveEnd(e:EffectEvent):void {
+			dragStartPoint = new Point(this.x, this.y);
+			var event:DragDropEvent = new DragDropEvent(BluewolfEventConst.DRAG_DROP, true, true, this, dragStartPoint);
+			this.dispatchEvent(event);
 		}
 		
 		/**
@@ -227,6 +243,7 @@ package org.bluewolf.topo.view {
 				var point:Point = this.getAlignPoint();
 				this.x = point.x - _icon.width / 2;
 				this.y = point.y - _icon.height / 2;
+				dragStartPoint = new Point(this.x, this.y);
 			}
 			invalidateDisplayList();
 		}

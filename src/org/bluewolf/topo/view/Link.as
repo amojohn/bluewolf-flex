@@ -23,9 +23,12 @@ THE SOFTWARE.
 
 package org.bluewolf.topo.view {
 	
+	import com.adobe.utils.ArrayUtil;
+	
 	import flash.geom.Point;
 	
 	import mx.core.UIComponent;
+	import mx.events.MoveEvent;
 	
 	import org.bluewolf.topo.event.BluewolfEventConst;
 	import org.bluewolf.topo.event.DragDropEvent;
@@ -51,6 +54,10 @@ package org.bluewolf.topo.view {
 		 */
 		public function Link() {
 			super();
+			registerEvents();
+		}
+		
+		private function registerEvents():void {
 		}
 		
 		/**
@@ -62,6 +69,7 @@ package org.bluewolf.topo.view {
 			this._srcNode.addEventListener(BluewolfEventConst.DRAG_DROP, onDragComplete);
 			this._srcNode.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
 			this._srcNode.addEventListener(BluewolfEventConst.NODE_MOVE, onNodeMove);
+			this._srcNode.addEventListener(MoveEvent.MOVE, onMove);
 			drawLink();
 		}
 		
@@ -82,6 +90,7 @@ package org.bluewolf.topo.view {
 			this._dstNode.addEventListener(BluewolfEventConst.DRAG_DROP, onDragComplete);
 			this._dstNode.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
 			this._dstNode.addEventListener(BluewolfEventConst.NODE_MOVE, onNodeMove);
+			this._dstNode.addEventListener(MoveEvent.MOVE, onMove);
 			drawLink();
 		}
 		
@@ -113,7 +122,7 @@ package org.bluewolf.topo.view {
 		/**
 		 * Draw a line between source and destination node in this Link object
 		 */
-		private function drawLink():void {
+		public function drawLink():void {
 			this.graphics.clear();
 			if (_srcNode != null && _dstNode != null) {
 				var sPoint:Point = _srcNode.getAlignPoint();
@@ -143,6 +152,9 @@ package org.bluewolf.topo.view {
 			drawLink();
 		}
 		
+		private function onMove(e:MoveEvent):void {
+			drawLink();
+		}
 	}
 	
 }

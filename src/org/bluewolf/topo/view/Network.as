@@ -106,6 +106,7 @@ package org.bluewolf.topo.view {
 			this.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			this.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			this.addEventListener(BluewolfEventConst.SELECT_NODE, onSelectNode);
+			this.addEventListener(BluewolfEventConst.DRAG_DROP, onNodeDragDrop);
 		}
 		
 		/**
@@ -239,6 +240,18 @@ package org.bluewolf.topo.view {
 				_selectionRect = null;
 			}
 			model.isSelectRect = false;
+		}
+		
+		private function onNodeDragDrop(e:DragDropEvent):void {
+			var offsetX:Number = e.node.x - e.startPoint.x;
+			var offsetY:Number = e.node.y - e.startPoint.y;
+			for each (var node:Node in _selectedNodes) {
+				if (node != e.node) {
+					node.setStyle("moveEffect", node.eMove);
+					node.move(node.x + offsetX, node.y + offsetY);
+					node.setStyle("moveEffect", null);
+				}
+			}
 		}
 		
 	}
