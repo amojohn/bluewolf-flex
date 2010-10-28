@@ -27,31 +27,25 @@ package org.bluewolf.topo.event {
 	
 	import org.bluewolf.topo.view.Node;
 	
-	
 	/**
-	 * Event to be dispatched after select or unselect when click the node
+	 * Event to be dispatched when dragging a node
 	 * 
 	 * @author	Rui
 	 */
-	public class SelectNodeEvent extends Event {
+	public class NodeMoveEvent extends Event {
 		
 		private var _node:Node;
-		private var _isSelect:Boolean = false;
-		private var _ctrlKey:Boolean = false;
 		
 		/**
-		 * Constructor for SelectNodeEvent class
+		 * Constructor for NodeMoveEvent class
 		 */
-		public function SelectNodeEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false,
-										oNode:Node=null, bIsSelect:Boolean=false, bCtrlKey:Boolean=false) {
+		public function NodeMoveEvent(type:String, bubbles:Boolean=false, cancelable:Boolean=false, oNode:Node=null) {
 			super(type, bubbles, cancelable);
 			this._node = oNode;
-			this._isSelect = bIsSelect;
-			this._ctrlKey = bCtrlKey;
 		}
 		
 		override public function clone():Event {
-			return new SelectNodeEvent(type, bubbles, cancelable, _node, _isSelect, _ctrlKey);
+			return new NodeMoveEvent(BluewolfEventConst.NODE_MOVE, bubbles, cancelable, _node);
 		}
 		
 		public function set node(value:Node):void {
@@ -62,20 +56,5 @@ package org.bluewolf.topo.event {
 			return this._node;
 		}
 		
-		public function set isSelect(value:Boolean):void {
-			this._isSelect = value;
-		}
-		
-		public function get isSelect():Boolean {
-			return this._isSelect;
-		}
-		
-		public function set ctrlKey(value:Boolean):void {
-			this._ctrlKey = value;
-		}
-		
-		public function get ctrlKey():Boolean {
-			return this._ctrlKey;
-		}
 	}
 }

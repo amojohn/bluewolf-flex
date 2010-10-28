@@ -26,11 +26,10 @@ package org.bluewolf.topo.view {
 	import flash.geom.Point;
 	
 	import mx.collections.ArrayList;
-	import mx.controls.Alert;
 	import mx.core.UIComponent;
-	import mx.events.DragEvent;
 	
 	import org.bluewolf.topo.event.BluewolfEventConst;
+	import org.bluewolf.topo.event.DragDropEvent;
 	import org.bluewolf.topo.event.LayerRemoveNodeEvent;
 	import org.bluewolf.topo.interf.IDragableElement;
 	import org.bluewolf.topo.model.ModelLocator;
@@ -88,7 +87,7 @@ package org.bluewolf.topo.view {
 		public function addNodes(arNodes:Array):ArrayList {
 			for each (var node:Node in arNodes) {
 				this._nodes.addItem(node);
-				node.addEventListener(DragEvent.DRAG_COMPLETE, onDragComplete);
+				node.addEventListener(BluewolfEventConst.DRAG_DROP, onDragComplete);
 				node.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
 				this.setGroupRange(node);
 			}
@@ -123,7 +122,7 @@ package org.bluewolf.topo.view {
 			this.graphics.endFill();
 		}
 		
-		private function onDragComplete(e:DragEvent):void {
+		private function onDragComplete(e:DragDropEvent):void {
 			var node:Node = e.currentTarget as Node;
 			
 			redrawGroup();

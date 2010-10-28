@@ -26,10 +26,11 @@ package org.bluewolf.topo.view {
 	import flash.geom.Point;
 	
 	import mx.core.UIComponent;
-	import mx.events.DragEvent;
 	
 	import org.bluewolf.topo.event.BluewolfEventConst;
+	import org.bluewolf.topo.event.DragDropEvent;
 	import org.bluewolf.topo.event.LayerRemoveNodeEvent;
+	import org.bluewolf.topo.event.NodeMoveEvent;
 	import org.bluewolf.topo.event.RemoveLinkEvent;
 	
 	[Event(name="RemoveLink", type="org.bluewolf.topo.event.RemoveLinkEvent")]
@@ -58,8 +59,9 @@ package org.bluewolf.topo.view {
 		 */
 		public function set source(value:Node):void {
 			this._srcNode = value;
-			this._srcNode.addEventListener(DragEvent.DRAG_COMPLETE, onDragComplete);
+			this._srcNode.addEventListener(BluewolfEventConst.DRAG_DROP, onDragComplete);
 			this._srcNode.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
+			this._srcNode.addEventListener(BluewolfEventConst.NODE_MOVE, onNodeMove);
 			drawLink();
 		}
 		
@@ -77,8 +79,9 @@ package org.bluewolf.topo.view {
 		 */
 		public function set destination(value:Node):void {
 			this._dstNode = value;
-			this._dstNode.addEventListener(DragEvent.DRAG_COMPLETE, onDragComplete);
+			this._dstNode.addEventListener(BluewolfEventConst.DRAG_DROP, onDragComplete);
 			this._dstNode.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
+			this._dstNode.addEventListener(BluewolfEventConst.NODE_MOVE, onNodeMove);
 			drawLink();
 		}
 		
@@ -126,7 +129,7 @@ package org.bluewolf.topo.view {
 		 * Listen the event fired after source or destination node dragged
 		 * @param e A DragEvent instance
 		 */
-		private function onDragComplete(e:DragEvent):void {
+		private function onDragComplete(e:DragDropEvent):void {
 			drawLink();
 		}
 		
@@ -134,6 +137,10 @@ package org.bluewolf.topo.view {
 			this.graphics.clear();
 			var event:RemoveLinkEvent = new RemoveLinkEvent(BluewolfEventConst.REMOVE_LINK, false, true, this);
 			this.dispatchEvent(event);
+		}
+		
+		private function onNodeMove(e:NodeMoveEvent):void {
+			drawLink();
 		}
 		
 	}

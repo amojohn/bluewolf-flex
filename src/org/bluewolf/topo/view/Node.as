@@ -24,11 +24,16 @@ THE SOFTWARE.
 package org.bluewolf.topo.view {
 	
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
 	import mx.controls.Image;
 	import mx.controls.Text;
 	
+	import org.bluewolf.topo.event.BluewolfEventConst;
+	import org.bluewolf.topo.event.DragDropEvent;
+	import org.bluewolf.topo.event.NodeMoveEvent;
+	import org.bluewolf.topo.event.SelectNodeEvent;
 	import org.bluewolf.topo.interf.IDragableElement;
 	import org.bluewolf.topo.model.ModelLocator;
 	
@@ -36,6 +41,7 @@ package org.bluewolf.topo.view {
 	import spark.layouts.HorizontalLayout;
 	
 	[Event(name="LayerRemoveNode", type="org.bluewolf.topo.event.LayerRemoveNodeEvent")]
+	[Event(name="DragDrop", type="org.bluewolf.topo.event.DragDropEvent")]
 	
 	/**
 	 * Node object in topological diagram, consist with icon(optional) and name label
@@ -49,6 +55,7 @@ package org.bluewolf.topo.view {
 		private var _label:Text = new Text();
 		private var _relativeX:Number = 0;
 		private var _relativeY:Number = 0;
+		private var _isDragging:Boolean = false;
 		
 		/**
 		 * Constructor for Node class
@@ -80,6 +87,9 @@ package org.bluewolf.topo.view {
 		 */
 		private function registerEvents():void {
 			this._icon.addEventListener(Event.COMPLETE, onIconComplete);
+			this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+			this.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			this.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 		}
 		
 		private function onIconComplete(e:Event):void {
@@ -93,6 +103,35 @@ package org.bluewolf.topo.view {
 			adjustPosition();
 			this.invalidateDisplayList();
 			this.dispatchEvent(e);
+		}
+		
+		private function onMouseDown(e:MouseEvent):void {
+			e.stopPropagation();
+			if (e.ctrlKey) {
+				this.setStyle("dropShadowVisible", !this.getStyle("dropShadowVisible"));
+			} else {
+				this.setStyle("dropShadowVisible", true);
+			}
+			var event:SelectNodeEvent = new SelectNodeEvent(
+				BluewolfEventConst.SELECT_NODE, true, true, this, this.getStyle("dropShadowVisible"), e.ctrlKey);
+			this.dispatchEvent(event);
+			this.startDrag();
+			_isDragging = true;
+		}
+		
+		private function onMouseUp(e:MouseEvent):void {
+			this.stopDrag();
+			_isDragging = false;
+			
+			var event:DragDropEvent = new DragDropEvent(BluewolfEventConst.DRAG_DROP, true, true, this);
+			this.dispatchEvent(event);
+		}
+		
+		private function onMouseMove(e:MouseEvent):void {
+			if (_isDragging) {
+				var event:NodeMoveEvent = new NodeMoveEvent(BluewolfEventConst.NODE_MOVE, false, true, this);
+				this.dispatchEvent(event);
+			}
 		}
 		
 		/**
