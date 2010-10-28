@@ -32,7 +32,6 @@ package org.bluewolf.topo.view {
 	import mx.managers.DragManager;
 	
 	import org.bluewolf.topo.event.BluewolfEventConst;
-	import org.bluewolf.topo.event.DragDropEvent;
 	import org.bluewolf.topo.event.LayerRemoveNodeEvent;
 	import org.bluewolf.topo.event.RemoveLinkEvent;
 	import org.bluewolf.topo.event.SelectNodeEvent;
@@ -107,7 +106,6 @@ package org.bluewolf.topo.view {
 		public function addNode(node:Node):void {
 			this.addElement(node);
 			this._nodes.push(node);
-			node.addEventListener(MouseEvent.MOUSE_DOWN, onNodeMouseDown);
 			this.invalidateDisplayList();
 		}
 		
@@ -197,21 +195,6 @@ package org.bluewolf.topo.view {
 				isSuccess = true;
 			}
 			return isSuccess;
-		}
-		
-		private function onNodeMouseDown(e:MouseEvent):void {
-			e.stopPropagation();
-			var indicator:Node = e.currentTarget as Node;
-			if (e.ctrlKey) {
-				indicator.setStyle("dropShadowVisible", !indicator.getStyle("dropShadowVisible"));
-				var event:SelectNodeEvent = new SelectNodeEvent(BluewolfEventConst.SELECT_NODE, false, true, indicator, indicator.getStyle("dropShadowVisible"));
-				this.dispatchEvent(event);
-			} else {
-				var dataSource:DragSource = new DragSource();
-				dataSource.addData(indicator, "node");
-				dataSource.addData({x:indicator.mouseX, y:indicator.mouseY}, "mouse");
-				DragManager.doDrag(indicator, dataSource, e);
-			}
 		}
 		
 		private function onRemoveLink(e:RemoveLinkEvent):void {

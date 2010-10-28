@@ -102,11 +102,10 @@ package org.bluewolf.topo.view {
 		 */
 		private function registerEvents():void {
 			this.addEventListener(FlexEvent.CREATION_COMPLETE, onInit);
-			this.addEventListener(DragEvent.DRAG_ENTER, onDragEnter);
-			this.addEventListener(DragEvent.DRAG_DROP, onDragDrop);
 			this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			this.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			this.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+			this.addEventListener(BluewolfEventConst.SELECT_NODE, onSelectNode);
 		}
 		
 		/**
@@ -133,7 +132,6 @@ package org.bluewolf.topo.view {
 			this.addElement(layer);
 			this._layers.push(layer);
 			this.selectedLayer = layer;
-			layer.addEventListener(BluewolfEventConst.SELECT_NODE, onSelectNode);
 			return layers.length - 1;
 		}
 		
@@ -188,10 +186,18 @@ package org.bluewolf.topo.view {
 		 * Handle of selecting or unselecting node by click it with CTRL button
 		 */
 		private function onSelectNode(e:SelectNodeEvent):void {
-			if (e.isSelect) {
+			if (!e.ctrlKey && _selectedNodes.length <= 1) {
+				/* If select more than one node, don't make the clicked node as the only one selected node */
+				for each (var node:Node in _selectedNodes) {
+					node.setStyle("dropShadowVisible", false);
+				}
+				_selectedNodes = new Array();
+				e.node.setStyle("dropShadowVisible", true);
 				_selectedNodes.push(e.node);
 			} else {
-				if (ArrayUtil.arrayContainsValue(_selectedNodes, e.node)) {
+				if (e.isSelect && !ArrayUtil.arrayContainsValue(_selectedNodes, e.node)) {
+					_selectedNodes.push(e.node);
+				} else if (!e.isSelect && ArrayUtil.arrayContainsValue(_selectedNodes, e.node)) {
 					ArrayUtil.removeValueFromArray(_selectedNodes, e.node);
 				}
 			}
@@ -200,22 +206,6 @@ package org.bluewolf.topo.view {
 		/**
 		 * Event listeners for Network class
 		 */
-		private function onDragEnter(e:DragEvent):void {
-			if (e.dragSource.hasFormat("node")) {
-				DragManager.acceptDragDrop(e.currentTarget as Network);
-			}
-		}
-		
-		private function onDragDrop(e:DragEvent):void {
-			var dataObj:Object = e.dragSource.dataForFormat("mouse") as Object;
-			var dragNode:Node = e.dragInitiator as Node;
-			dragNode.x = this.mouseX - dataObj.x;
-			dragNode.y = this.mouseY - dataObj.y;
-			
-			var event:DragDropEvent = new DragDropEvent(BluewolfEventConst.DRAG_DROP, false, true, dragNode);
-			this.dispatchEvent(event);
-		}
-		
 		private function onMouseDown(e:MouseEvent):void {
 			_selectionRect = new SelectionRect();
 			this.addElement(_selectionRect);
@@ -237,10 +227,12 @@ package org.bluewolf.topo.view {
 					node.setStyle("dropShadowVisible", false);
 				}
 				_selectedNodes = new Array();
-				for each (node in selectedLayer.nodes) {
-					if (_selectionRect.isNodeInRect(node.x, node.y)) {
-						_selectedNodes.push(node);
-						node.setStyle("dropShadowVisible", true);
+				for each (var layer:Layer in _layers) {
+					for each (node in layer.nodes) {
+						if (_selectionRect.isNodeInRect(node.x, node.y)) {
+							_selectedNodes.push(node);
+							node.setStyle("dropShadowVisible", true);
+						}
 					}
 				}
 				this.removeElement(_selectionRect);

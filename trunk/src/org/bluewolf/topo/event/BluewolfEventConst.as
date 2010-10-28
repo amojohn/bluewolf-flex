@@ -33,5 +33,6 @@ package org.bluewolf.topo.event {
 		public static const LAYER_REMOVE_NODE:String = "LayerRemoveNode";
 		public static const REMOVE_LINK:String = "RemoveLink";
 		public static const SELECT_NODE:String = "SelectNode";
+		public static const NODE_MOVE:String = "NodeMove";
 	}
 }
