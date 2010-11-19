@@ -34,5 +34,6 @@ package org.bluewolf.topo.event {
 		public static const REMOVE_LINK:String = "RemoveLink";
 		public static const SELECT_NODE:String = "SelectNode";
 		public static const NODE_MOVE:String = "NodeMove";
+		public static const MENU_ITEM_SELECT:String = "MenuItemSelect";
 	}
 }

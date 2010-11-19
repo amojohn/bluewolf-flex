@@ -208,10 +208,15 @@ package org.bluewolf.topo.view {
 		 * Event listeners for Network class
 		 */
 		private function onMouseDown(e:MouseEvent):void {
-			_selectionRect = new SelectionRect();
-			this.addElement(_selectionRect);
-			model.isSelectRect = true;
-			_selectionRect.start = new Point(e.localX, e.localY);
+			if (e.altKey) {
+				e.stopPropagation();
+				this.startDrag();
+			} else {
+				_selectionRect = new SelectionRect();
+				this.addElement(_selectionRect);
+				model.isSelectRect = true;
+				_selectionRect.start = new Point(e.localX, e.localY);
+			}
 		}
 		
 		private function onMouseMove(e:MouseEvent):void {
@@ -221,6 +226,7 @@ package org.bluewolf.topo.view {
 		}
 		
 		private function onMouseUp(e:MouseEvent):void {
+			this.stopDrag();
 			if (model.isSelectRect) {
 				_selectionRect.end = new Point(e.localX, e.localY);
 				_selectionRect.clearRect();

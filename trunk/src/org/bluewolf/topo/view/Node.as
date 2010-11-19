@@ -25,15 +25,19 @@ package org.bluewolf.topo.view {
 	
 	import com.adobe.utils.ArrayUtil;
 	
+	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.ui.ContextMenu;
+	import flash.ui.ContextMenuItem;
 	
 	import mx.controls.Image;
 	import mx.controls.Text;
 	import mx.effects.Move;
 	import mx.events.EffectEvent;
 	
+	import org.bluewolf.topo.event.BWContextMenuEvent;
 	import org.bluewolf.topo.event.BluewolfEventConst;
 	import org.bluewolf.topo.event.DragDropEvent;
 	import org.bluewolf.topo.event.NodeMoveEvent;
@@ -46,6 +50,7 @@ package org.bluewolf.topo.view {
 	
 	[Event(name="LayerRemoveNode", type="org.bluewolf.topo.event.LayerRemoveNodeEvent")]
 	[Event(name="DragDrop", type="org.bluewolf.topo.event.DragDropEvent")]
+	[Event(name="MenuItemSelect", type="org.bluewolf.topo.event.BWContextMenuEvent")]
 	
 	/**
 	 * Node object in topological diagram, consist with icon(optional) and name label
@@ -70,8 +75,6 @@ package org.bluewolf.topo.view {
 			super();
 			
 			this.minWidth = this.minHeight = 0;
-			eMove = new Move(this);
-			eMove.duration = 200;
 			
 			initStyle();
 			registerEvents();
@@ -194,6 +197,10 @@ package org.bluewolf.topo.view {
 		 * Initialize node's style
 		 */
 		private function initStyle():void {
+			/* Set effects */
+			eMove = new Move(this);
+			eMove.duration = 200;
+			
 			this.setStyle("borderVisible", false);
 			this.setStyle("backgroundAlpha", 0);
 			this.setStyle("fontSize", 9);
@@ -246,6 +253,32 @@ package org.bluewolf.topo.view {
 				dragStartPoint = new Point(this.x, this.y);
 			}
 			invalidateDisplayList();
+		}
+		
+		/**
+		 * Add node's context menu items
+		 * @param menuItems An array contains contextMenu items' name
+		 */
+		public function addContextMenuItems(menuItems:Array):void {
+			var contextMenu:ContextMenu = new ContextMenu();
+			contextMenu.hideBuiltInItems();
+			
+			if (menuItems != null && menuItems.length > 0) {
+				for each (var item:String in menuItems) {
+					var menuItem:ContextMenuItem = new ContextMenuItem(item);
+					menuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onContextMenuItemSelect);
+					contextMenu.customItems.push(menuItem);
+				}
+			}
+			this.contextMenu = contextMenu;
+		}
+		
+		private function onContextMenuItemSelect(e:ContextMenuEvent):void {
+			e.stopPropagation();
+			var item:ContextMenuItem = e.currentTarget as ContextMenuItem;
+			var event:BWContextMenuEvent = new BWContextMenuEvent(BluewolfEventConst.MENU_ITEM_SELECT,
+					true, true, e.mouseTarget, e.contextMenuOwner, this, item.caption, this.className);
+			this.dispatchEvent(event);
 		}
 		
 	}
