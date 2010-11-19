@@ -58,6 +58,7 @@ package org.bluewolf.topo.view {
 			super();
 			
 			this.initStyle();
+			this.registerEvents();
 			
 			this.percentWidth = this.percentHeight = 100;
 			this.width = model.appWidth;
@@ -88,8 +89,7 @@ package org.bluewolf.topo.view {
 		/**
 		 * Register initial events for the current layer
 		 */
-		private function registerEvents():void {
-		}
+		private function registerEvents():void {}
 		
 		/**
 		 * Get all nodes in this layer
