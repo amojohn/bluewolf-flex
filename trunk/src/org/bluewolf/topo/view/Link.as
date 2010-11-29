@@ -144,7 +144,7 @@ package org.bluewolf.topo.view {
 		
 		private function onLayerRemoveNode(e:LayerRemoveNodeEvent):void {
 			this.graphics.clear();
-			var event:RemoveLinkEvent = new RemoveLinkEvent(BluewolfEventConst.REMOVE_LINK, false, true, this);
+			var event:RemoveLinkEvent = new RemoveLinkEvent(BluewolfEventConst.REMOVE_LINK, true, true, this);
 			this.dispatchEvent(event);
 		}
 		

@@ -118,7 +118,7 @@ package org.bluewolf.topo.view {
 			var isSuccess:Boolean = false;
 			if (ArrayUtil.arrayContainsValue(_nodes, node)) {
 				var event:LayerRemoveNodeEvent = new LayerRemoveNodeEvent(BluewolfEventConst.LAYER_REMOVE_NODE,
-					false, true, node);
+					true, true, node);
 				node.dispatchEvent(event);
 				
 				this.removeElement(node);
