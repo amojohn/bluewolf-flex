@@ -75,6 +75,7 @@ package org.bluewolf.topo.view {
 			this._srcNode.addEventListener(BluewolfEventConst.DRAG_DROP, onDragComplete);
 			this._srcNode.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
 			this._srcNode.addEventListener(BluewolfEventConst.NODE_MOVE, onNodeMove);
+			this._srcNode.addEventListener(MoveEvent.MOVE, onMove);
 			this._srcNode.addEventListener(Event.COMPLETE, onIconComplete);
 		}
 		
@@ -95,6 +96,7 @@ package org.bluewolf.topo.view {
 			this._dstNode.addEventListener(BluewolfEventConst.DRAG_DROP, onDragComplete);
 			this._dstNode.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
 			this._dstNode.addEventListener(BluewolfEventConst.NODE_MOVE, onNodeMove);
+			this._dstNode.addEventListener(MoveEvent.MOVE, onMove);
 			this._dstNode.addEventListener(Event.COMPLETE, onIconComplete);
 		}
 		
@@ -184,6 +186,10 @@ package org.bluewolf.topo.view {
 		
 		private function onNodeMove(e:NodeMoveEvent):void {
 			drawLink("straight");
+		}
+		
+		private function onMove(e:MoveEvent):void {
+			drawLink();
 		}
 		
 		private function onIconComplete(e:Event):void {
