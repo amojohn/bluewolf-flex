@@ -125,6 +125,7 @@ package org.bluewolf.topo.view {
 				this.height = this._label.height;
 			adjustPosition();
 			this.invalidateDisplayList();
+			getAllControlPoints();
 			this.dispatchEvent(e);
 		}
 		
@@ -162,6 +163,9 @@ package org.bluewolf.topo.view {
 		
 		private function onMoveEnd(e:EffectEvent):void {
 			dragStartPoint = new Point(this.x, this.y);
+			
+			getAllControlPoints();
+			
 			var event:DragDropEvent = new DragDropEvent(BluewolfEventConst.DRAG_DROP, true, true, this, dragStartPoint);
 			this.dispatchEvent(event);
 		}
