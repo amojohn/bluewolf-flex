@@ -48,6 +48,7 @@ package org.bluewolf.topo.view {
 		private var _srcNode:Node;
 		private var _dstNode:Node;
 		private var _thickness:Number = 2;
+		public var cPoint:Point;
 		
 		/**
 		 * Constructor for Link class
@@ -69,8 +70,6 @@ package org.bluewolf.topo.view {
 			this._srcNode.addEventListener(BluewolfEventConst.DRAG_DROP, onDragComplete);
 			this._srcNode.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
 			this._srcNode.addEventListener(BluewolfEventConst.NODE_MOVE, onNodeMove);
-			this._srcNode.addEventListener(MoveEvent.MOVE, onMove);
-			drawLink();
 		}
 		
 		/**
@@ -90,8 +89,6 @@ package org.bluewolf.topo.view {
 			this._dstNode.addEventListener(BluewolfEventConst.DRAG_DROP, onDragComplete);
 			this._dstNode.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
 			this._dstNode.addEventListener(BluewolfEventConst.NODE_MOVE, onNodeMove);
-			this._dstNode.addEventListener(MoveEvent.MOVE, onMove);
-			drawLink();
 		}
 		
 		/**
@@ -122,14 +119,18 @@ package org.bluewolf.topo.view {
 		/**
 		 * Draw a line between source and destination node in this Link object
 		 */
-		public function drawLink():void {
+		public function drawLink(lineType:String=null):void {
 			this.graphics.clear();
 			if (_srcNode != null && _dstNode != null) {
 				var sPoint:Point = _srcNode.getAlignPoint();
 				var dPoint:Point = _dstNode.getAlignPoint();
 				this.graphics.moveTo(sPoint.x, sPoint.y);
-				this.graphics.lineStyle(this._thickness, 0x00ff00);
-				this.graphics.lineTo(dPoint.x, dPoint.y);
+				this.graphics.lineStyle(this._thickness, 0x00ff00, 1);
+				if (this.source.getConnection(this.destination.uid).length <= 1 || lineType == "straight") {
+					this.graphics.lineTo(dPoint.x, dPoint.y);
+				} else {
+					this.graphics.curveTo(cPoint.x, cPoint.y, dPoint.x, dPoint.y);
+				}
 			}
 			invalidateDisplayList();
 		}
@@ -149,11 +150,7 @@ package org.bluewolf.topo.view {
 		}
 		
 		private function onNodeMove(e:NodeMoveEvent):void {
-			drawLink();
-		}
-		
-		private function onMove(e:MoveEvent):void {
-			drawLink();
+			drawLink("straight");
 		}
 	}
 	

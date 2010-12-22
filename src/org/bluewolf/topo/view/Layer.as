@@ -26,6 +26,7 @@ package org.bluewolf.topo.view {
 	import com.adobe.utils.ArrayUtil;
 	
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	
 	import mx.controls.Alert;
 	import mx.core.DragSource;
@@ -36,6 +37,7 @@ package org.bluewolf.topo.view {
 	import org.bluewolf.topo.event.RemoveLinkEvent;
 	import org.bluewolf.topo.event.SelectNodeEvent;
 	import org.bluewolf.topo.model.ModelLocator;
+	import org.bluewolf.topo.util.TopoUtil;
 	
 	import spark.components.Group;
 		
@@ -145,6 +147,11 @@ package org.bluewolf.topo.view {
 			this.addElementAt(link, 0);
 			link.addEventListener(BluewolfEventConst.REMOVE_LINK, onRemoveLink);
 			this._links.push(link);
+			link.source.addConnection(link.destination.uid, link);
+			link.destination.addConnection(link.source.uid, link);
+			
+			redrawExistLinksByNodes(link);
+			
 			this.invalidateDisplayList();
 		}
 		
@@ -160,6 +167,8 @@ package org.bluewolf.topo.view {
 				ArrayUtil.removeValueFromArray(_links, link);
 				isSuccess = true;
 			}
+			link.source.removeConnection(link.destination.uid, link);
+			link.destination.removeConnection(link.source.uid, link);
 			this.invalidateDisplayList();
 			return isSuccess;
 		}
@@ -199,6 +208,17 @@ package org.bluewolf.topo.view {
 		
 		private function onRemoveLink(e:RemoveLinkEvent):void {
 			this.removeLink(e.link);
+		}
+		
+		private function redrawExistLinksByNodes(link:Link):void {
+			if (link.source.getConnection(link.destination.uid).length == link.destination.getConnection(link.source.uid).length) {
+				var arExistLinks:Array = link.source.getConnection(link.destination.uid);
+				var cps:Array = TopoUtil.getControlPoints(link, arExistLinks.length-1);
+				for (var i:int = 0; i < arExistLinks.length; i++) {
+					arExistLinks[i].cPoint = cps[i];
+					arExistLinks[i].drawLink();
+				}
+			}
 		}
 	}
 }

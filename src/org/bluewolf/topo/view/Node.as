@@ -32,10 +32,14 @@ package org.bluewolf.topo.view {
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
 	
+	import mx.controls.Alert;
 	import mx.controls.Image;
 	import mx.controls.Text;
+	import mx.core.IUID;
 	import mx.effects.Move;
 	import mx.events.EffectEvent;
+	import mx.utils.ObjectUtil;
+	import mx.utils.UIDUtil;
 	
 	import org.bluewolf.topo.event.BWContextMenuEvent;
 	import org.bluewolf.topo.event.BluewolfEventConst;
@@ -44,6 +48,7 @@ package org.bluewolf.topo.view {
 	import org.bluewolf.topo.event.SelectNodeEvent;
 	import org.bluewolf.topo.interf.IDragableElement;
 	import org.bluewolf.topo.model.ModelLocator;
+	import org.bluewolf.topo.util.TopoUtil;
 	
 	import spark.components.BorderContainer;
 	import spark.layouts.HorizontalLayout;
@@ -57,14 +62,17 @@ package org.bluewolf.topo.view {
 	 * 
 	 * @author	Rui
 	 */
-	public class Node extends BorderContainer implements IDragableElement {
+	public class Node extends BorderContainer implements IDragableElement, IUID {
 		
 		private var model:ModelLocator = ModelLocator.getInstance();
+		private var _uid:String;
 		private var _icon:Image = new Image();
 		private var _label:Text = new Text();
 		private var _relativeX:Number = 0;
 		private var _relativeY:Number = 0;
 		private var _isDragging:Boolean = false;
+		private var _connectionMap:Object;
+		
 		public var eMove:Move;
 		public var dragStartPoint:Point;
 		
@@ -74,7 +82,10 @@ package org.bluewolf.topo.view {
 		public function Node(relaX:Number=0, relaY:Number=0) {
 			super();
 			
+			_uid = UIDUtil.createUID();
+			
 			this.minWidth = this.minHeight = 0;
+			_connectionMap = new Object();
 			
 			initStyle();
 			registerEvents();
@@ -136,6 +147,8 @@ package org.bluewolf.topo.view {
 			this.stopDrag();
 			_isDragging = false;
 			
+			getAllControlPoints();
+			
 			var event:DragDropEvent = new DragDropEvent(BluewolfEventConst.DRAG_DROP, true, true, this, dragStartPoint);
 			this.dispatchEvent(event);
 		}
@@ -151,6 +164,12 @@ package org.bluewolf.topo.view {
 			dragStartPoint = new Point(this.x, this.y);
 			var event:DragDropEvent = new DragDropEvent(BluewolfEventConst.DRAG_DROP, true, true, this, dragStartPoint);
 			this.dispatchEvent(event);
+		}
+		
+		override public function set uid(value:String):void {}
+		
+		override public function get uid():String {
+			return this._uid;
 		}
 		
 		/**
@@ -279,6 +298,61 @@ package org.bluewolf.topo.view {
 			var event:BWContextMenuEvent = new BWContextMenuEvent(BluewolfEventConst.MENU_ITEM_SELECT,
 					true, true, e.mouseTarget, e.contextMenuOwner, this, item.caption, this.className);
 			this.dispatchEvent(event);
+		}
+		
+		/**
+		 * Add the connected link to this node
+		 * @param node The node connect to this node by the link
+		 * @param link The link which connect this node to another node
+		 * @return The links array this node connected to the given node
+		 */
+		public function addConnection(nodeUID:String, link:Link):Array {
+			if (_connectionMap[nodeUID] == null) {
+				_connectionMap[nodeUID] = new Array();
+			}
+			_connectionMap[nodeUID].push(link);
+			return _connectionMap[nodeUID];
+		}
+		
+		/**
+		 * Remove the connected link to this node
+		 * @paran node The node connect to this node by the link
+		 * @param link The link which connect this node to another node
+		 * @return The links array this node connected to the given node
+		 */
+		public function removeConnection(nodeUID:String, link:Link):Array {
+			if (_connectionMap[nodeUID] == null) {
+				_connectionMap[nodeUID] = new Array();
+			} else {
+				if (ArrayUtil.arrayContainsValue(_connectionMap[nodeUID], link)) {
+					ArrayUtil.removeValueFromArray(_connectionMap[nodeUID], link);
+				}
+			}
+			return _connectionMap[nodeUID];
+		}
+		
+		/**
+		 * Get all links between this node and the given node
+		 * @param node The node connect to this node
+		 * @return The links array this node connected to the given node
+		 */
+		public function getConnection(nodeUID:String):Array {
+			if (_connectionMap[nodeUID] == null) {
+				_connectionMap[nodeUID] = new Array();
+			}
+			return _connectionMap[nodeUID];
+		}
+		
+		private function getAllControlPoints():void {
+			var fields:Array = ObjectUtil.getClassInfo(_connectionMap)["properties"] as Array;
+			for each (var q:QName in fields) {
+				if (_connectionMap[q.localName].length > 1) {
+					var cps:Array = TopoUtil.getControlPoints(_connectionMap[q.localName][0], _connectionMap[q.localName].length-1);
+					for (var i:int = 0; i < _connectionMap[q.localName].length; i++) {
+						_connectionMap[q.localName][i].cPoint = cps[i];
+					}
+				}
+			}
 		}
 		
 	}
