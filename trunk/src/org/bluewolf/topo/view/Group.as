@@ -25,6 +25,7 @@ package org.bluewolf.topo.view {
 	
 	import com.adobe.utils.ArrayUtil;
 	
+	import flash.events.Event;
 	import flash.geom.Point;
 	
 	import mx.collections.ArrayList;
@@ -95,6 +96,7 @@ package org.bluewolf.topo.view {
 				this._nodes.addItem(node);
 				node.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
 				node.addEventListener(MoveEvent.MOVE, onMove);
+				node.addEventListener(Event.COMPLETE, onIconComplete);
 				this.setGroupRange(node);
 			}
 			drawGroup();
@@ -179,6 +181,10 @@ package org.bluewolf.topo.view {
 		}
 		
 		private function onMove(e:MoveEvent):void {
+			redrawGroup();
+		}
+		
+		private function onIconComplete(e:Event):void {
 			redrawGroup();
 		}
 		

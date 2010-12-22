@@ -25,11 +25,16 @@ package org.bluewolf.topo.view {
 	
 	import com.adobe.utils.ArrayUtil;
 	
+	import flash.events.ContextMenuEvent;
+	import flash.events.Event;
 	import flash.geom.Point;
+	import flash.ui.ContextMenu;
+	import flash.ui.ContextMenuItem;
 	
 	import mx.core.UIComponent;
 	import mx.events.MoveEvent;
 	
+	import org.bluewolf.topo.event.BWContextMenuEvent;
 	import org.bluewolf.topo.event.BluewolfEventConst;
 	import org.bluewolf.topo.event.DragDropEvent;
 	import org.bluewolf.topo.event.LayerRemoveNodeEvent;
@@ -70,6 +75,7 @@ package org.bluewolf.topo.view {
 			this._srcNode.addEventListener(BluewolfEventConst.DRAG_DROP, onDragComplete);
 			this._srcNode.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
 			this._srcNode.addEventListener(BluewolfEventConst.NODE_MOVE, onNodeMove);
+			this._srcNode.addEventListener(Event.COMPLETE, onIconComplete);
 		}
 		
 		/**
@@ -89,6 +95,7 @@ package org.bluewolf.topo.view {
 			this._dstNode.addEventListener(BluewolfEventConst.DRAG_DROP, onDragComplete);
 			this._dstNode.addEventListener(BluewolfEventConst.LAYER_REMOVE_NODE, onLayerRemoveNode);
 			this._dstNode.addEventListener(BluewolfEventConst.NODE_MOVE, onNodeMove);
+			this._dstNode.addEventListener(Event.COMPLETE, onIconComplete);
 		}
 		
 		/**
@@ -136,6 +143,32 @@ package org.bluewolf.topo.view {
 		}
 		
 		/**
+		 * Add link's context menu items
+		 * @param menuItems An array contains contextMenu items' name
+		 */
+		public function addContextMenuItems(menuItems:Array):void {
+			var contextMenu:ContextMenu = new ContextMenu();
+			contextMenu.hideBuiltInItems();
+			
+			if (menuItems != null && menuItems.length > 0) {
+				for each (var item:String in menuItems) {
+					var menuItem:ContextMenuItem = new ContextMenuItem(item);
+					menuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onContextMenuItemSelect);
+					contextMenu.customItems.push(menuItem);
+				}
+			}
+			this.contextMenu = contextMenu;
+		}
+		
+		private function onContextMenuItemSelect(e:ContextMenuEvent):void {
+			e.stopPropagation();
+			var item:ContextMenuItem = e.currentTarget as ContextMenuItem;
+			var event:BWContextMenuEvent = new BWContextMenuEvent(BluewolfEventConst.MENU_ITEM_SELECT,
+				true, true, e.mouseTarget, e.contextMenuOwner, this, item.caption, this.className);
+			this.dispatchEvent(event);
+		}
+		
+		/**
 		 * Listen the event fired after source or destination node dragged
 		 * @param e A DragEvent instance
 		 */
@@ -151,6 +184,10 @@ package org.bluewolf.topo.view {
 		
 		private function onNodeMove(e:NodeMoveEvent):void {
 			drawLink("straight");
+		}
+		
+		private function onIconComplete(e:Event):void {
+			drawLink();
 		}
 	}
 	
