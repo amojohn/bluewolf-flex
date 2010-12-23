@@ -117,7 +117,7 @@ package org.bluewolf.topo.view {
 			model.appWidth = this.width;
 			model.appHeight = this.height;
 			
-			_zoom = new Zoom(this);
+			_zoom = new Zoom();
 		}
 		
 		/**
@@ -169,10 +169,12 @@ package org.bluewolf.topo.view {
 		 * @param coefficient The value of new size coefficient
 		 */
 		public function zoom(coefficient:Number):void {
-			_zoom.zoomWidthFrom = _zoom.zoomHeightFrom = _zoomCoefficient;
-			_zoom.zoomWidthTo = _zoom.zoomHeightTo = coefficient;
-			_zoom.play();
-			_zoomCoefficient = coefficient;
+//			_zoom.targets = this.layers;
+//			_zoom.zoomWidthFrom = _zoom.zoomHeightFrom = _zoomCoefficient;
+//			_zoom.zoomWidthTo = _zoom.zoomHeightTo = coefficient;
+//			_zoomCoefficient = coefficient;
+//			_zoom.play();
+			this.scaleX = this.scaleY = coefficient;
 		}
 		
 		/**
