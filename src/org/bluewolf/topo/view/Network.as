@@ -210,7 +210,7 @@ package org.bluewolf.topo.view {
 		private function onMouseDown(e:MouseEvent):void {
 			if (e.altKey) {
 				e.stopPropagation();
-				this.startDrag();
+				this.selectedLayer.startDrag();
 			} else {
 				_selectionRect = new SelectionRect();
 				this.addElement(_selectionRect);
@@ -226,7 +226,7 @@ package org.bluewolf.topo.view {
 		}
 		
 		private function onMouseUp(e:MouseEvent):void {
-			this.stopDrag();
+			this.selectedLayer.stopDrag();
 			if (model.isSelectRect) {
 				_selectionRect.end = new Point(e.localX, e.localY);
 				_selectionRect.clearRect();
