@@ -53,6 +53,7 @@ package org.bluewolf.topo.view {
 		private var _srcNode:Node;
 		private var _dstNode:Node;
 		private var _thickness:Number = 2;
+		private var _color:Number = 0x00ff00;
 		public var cPoint:Point;
 		
 		/**
@@ -126,6 +127,23 @@ package org.bluewolf.topo.view {
 		}
 		
 		/**
+		 * Color of this link
+		 * @param value link's color value
+		 */
+		public function set color(value:Number):void {
+			this._color = value;
+			drawLink();
+		}
+		
+		/**
+		 * Color of this link
+		 * @return link's color value
+		 */
+		public function get color():Number {
+			return this._color;
+		}
+		
+		/**
 		 * Draw a line between source and destination node in this Link object
 		 */
 		public function drawLink(lineType:String=null):void {
@@ -134,7 +152,7 @@ package org.bluewolf.topo.view {
 				var sPoint:Point = _srcNode.getAlignPoint();
 				var dPoint:Point = _dstNode.getAlignPoint();
 				this.graphics.moveTo(sPoint.x, sPoint.y);
-				this.graphics.lineStyle(this._thickness, 0x00ff00, 1);
+				this.graphics.lineStyle(this._thickness, _color, 1);
 				if (this.source.getConnection(this.destination.uid).length <= 1 || lineType == "straight") {
 					this.graphics.lineTo(dPoint.x, dPoint.y);
 				} else {
