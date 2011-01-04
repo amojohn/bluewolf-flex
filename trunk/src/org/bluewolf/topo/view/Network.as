@@ -32,6 +32,7 @@ package org.bluewolf.topo.view {
 	import mx.effects.Zoom;
 	import mx.events.DragEvent;
 	import mx.events.FlexEvent;
+	import mx.managers.CursorManager;
 	import mx.managers.DragManager;
 	
 	import org.bluewolf.topo.event.BluewolfEventConst;
@@ -51,6 +52,10 @@ package org.bluewolf.topo.view {
 	 */
 	public class Network extends Group {
 		
+		[Embed(source="assets/move_hand.png")]
+		private var move_hand:Class;
+		
+		private var _cursorId:int;
 		private var _layers:Array = new Array();
 		private var _zoomCoefficient:Number = 1;
 		private var _zoom:Zoom;
@@ -189,7 +194,7 @@ package org.bluewolf.topo.view {
 		 * Handle of selecting or unselecting node by click it with CTRL button
 		 */
 		private function onSelectNode(e:SelectNodeEvent):void {
-			if (!e.ctrlKey && _selectedNodes.length <= 1) {
+			if (!e.ctrlKey) {// && _selectedNodes.length <= 1) {
 				/* If select more than one node, don't make the clicked node as the only one selected node */
 				for each (var node:Node in _selectedNodes) {
 					node.setStyle("dropShadowVisible", false);
@@ -210,15 +215,16 @@ package org.bluewolf.topo.view {
 		 * Event listeners for Network class
 		 */
 		private function onMouseDown(e:MouseEvent):void {
-			if (e.altKey) {
+//			if (e.altKey) {
 				e.stopPropagation();
 				this.selectedLayer.startDrag();
-			} else {
-				_selectionRect = new SelectionRect();
-				this.addElement(_selectionRect);
-				model.isSelectRect = true;
-				_selectionRect.start = new Point(e.localX, e.localY);
-			}
+				_cursorId = CursorManager.setCursor(move_hand);
+//			} else {
+//				_selectionRect = new SelectionRect();
+//				this.addElement(_selectionRect);
+//				model.isSelectRect = true;
+//				_selectionRect.start = new Point(e.localX, e.localY);
+//			}
 		}
 		
 		private function onMouseMove(e:MouseEvent):void {
@@ -229,6 +235,7 @@ package org.bluewolf.topo.view {
 		
 		private function onMouseUp(e:MouseEvent):void {
 			this.selectedLayer.stopDrag();
+			CursorManager.removeCursor(_cursorId);
 			if (model.isSelectRect) {
 				_selectionRect.end = new Point(e.localX, e.localY);
 				_selectionRect.clearRect();
@@ -236,14 +243,14 @@ package org.bluewolf.topo.view {
 					node.setStyle("dropShadowVisible", false);
 				}
 				_selectedNodes = new Array();
-				for each (var layer:Layer in _layers) {
-					for each (node in layer.nodes) {
-						if (_selectionRect.isNodeInRect(node.x, node.y)) {
-							_selectedNodes.push(node);
-							node.setStyle("dropShadowVisible", true);
-						}
-					}
-				}
+//				for each (var layer:Layer in _layers) {
+//					for each (node in layer.nodes) {
+//						if (_selectionRect.isNodeInRect(node.x, node.y)) {
+//							_selectedNodes.push(node);
+//							node.setStyle("dropShadowVisible", true);
+//						}
+//					}
+//				}
 				this.removeElement(_selectionRect);
 				_selectionRect = null;
 			}
