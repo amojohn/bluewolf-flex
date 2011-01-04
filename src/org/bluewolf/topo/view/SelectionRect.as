@@ -75,7 +75,7 @@ package org.bluewolf.topo.view {
 		 */
 		public function set end(value:Point):void {
 			this._end = value;
-			this.drawRect();
+//			this.drawRect();
 		}
 		
 		/**
