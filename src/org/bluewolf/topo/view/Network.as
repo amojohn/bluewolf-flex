@@ -218,11 +218,11 @@ package org.bluewolf.topo.view {
 					for each (var node:Node in layer.nodes) {
 						if (node.id == id) {
 							sNode = node;
-							break;
+//							break;
 						}
 					}
 					if (sNode != null) {
-						break;
+//						break;
 					}
 				}
 				for each (var n:Node in selectedNodes) {
