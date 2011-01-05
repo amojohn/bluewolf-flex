@@ -56,12 +56,12 @@ package org.bluewolf.topo.view {
 		private var move_hand:Class;
 		
 		private var _cursorId:int;
-		private var _layers:Array = new Array();
-		private var _zoomCoefficient:Number = 1;
+		private var _layers:Array;
+		private var _zoomCoefficient:Number;
 		private var _zoom:Zoom;
-		public var selectedLayer:Layer = null;
+		public var selectedLayer:Layer;
 		private var _selectionRect:SelectionRect;
-		private var _selectedNodes:Array = new Array();
+		private var _selectedNodes:Array;
 		private var model:ModelLocator = ModelLocator.getInstance();
 		
 		/**
@@ -106,7 +106,7 @@ package org.bluewolf.topo.view {
 		 * Register initial events for this network
 		 */
 		private function registerEvents():void {
-			this.addEventListener(FlexEvent.CREATION_COMPLETE, onInit);
+			this.addEventListener(FlexEvent.CREATION_COMPLETE, init);
 			this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			this.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
 			this.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
@@ -118,9 +118,14 @@ package org.bluewolf.topo.view {
 		 * Things to do after creating the network object
 		 * @param e FlexEvent
 		 */
-		private function onInit(e:FlexEvent):void {
+		private function init(e:FlexEvent=null):void {
 			model.appWidth = this.width;
 			model.appHeight = this.height;
+			
+			_layers = new Array();
+			_zoomCoefficient = 1;
+			selectedLayer = null;
+			_selectedNodes = new Array();
 			
 			_zoom = new Zoom();
 		}
@@ -218,11 +223,11 @@ package org.bluewolf.topo.view {
 					for each (var node:Node in layer.nodes) {
 						if (node.id == id) {
 							sNode = node;
-//							break;
+							break;
 						}
 					}
 					if (sNode != null) {
-//						break;
+						break;
 					}
 				}
 				for each (var n:Node in selectedNodes) {
@@ -232,6 +237,10 @@ package org.bluewolf.topo.view {
 				sNode.setStyle("dropShadowVisible", true);
 			}
 			return sNode;
+		}
+		
+		public function reset():void {
+			this.init();
 		}
 		
 		/**
