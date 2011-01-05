@@ -211,6 +211,29 @@ package org.bluewolf.topo.view {
 			}
 		}
 		
+		public function selectNode(id:String=""):Node {
+			var sNode:Node = null;
+			if (id != "") {
+				for each (var layer:Layer in this._layers) {
+					for each (var node:Node in layer.nodes) {
+						if (node.id == id) {
+							sNode = node;
+							break;
+						}
+					}
+					if (sNode != null) {
+						break;
+					}
+				}
+				for each (var n:Node in selectedNodes) {
+					n.setStyle("dropShadowVisible", false);
+				}
+				this._selectedNodes = [sNode];
+				sNode.setStyle("dropShadowVisible", true);
+			}
+			return sNode;
+		}
+		
 		/**
 		 * Event listeners for Network class
 		 */
