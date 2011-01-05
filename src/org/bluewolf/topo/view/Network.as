@@ -240,6 +240,7 @@ package org.bluewolf.topo.view {
 		}
 		
 		public function reset():void {
+			this.removeAllElements();
 			this.init();
 		}
 		
