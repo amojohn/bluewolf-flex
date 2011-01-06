@@ -171,8 +171,14 @@ package org.bluewolf.topo.view {
 			contextMenu.hideBuiltInItems();
 			
 			if (menuItems != null && menuItems.length > 0) {
+				var seperatorFlag:Boolean = false;
 				for each (var item:String in menuItems) {
-					var menuItem:ContextMenuItem = new ContextMenuItem(item);
+					if (item == "-") {
+						seperatorFlag = true;
+						continue;
+					}
+					var menuItem:ContextMenuItem = new ContextMenuItem(item, seperatorFlag);
+					seperatorFlag = false;
 					menuItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, onContextMenuItemSelect);
 					contextMenu.customItems.push(menuItem);
 				}
