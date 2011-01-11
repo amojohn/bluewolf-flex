@@ -261,6 +261,10 @@ package org.bluewolf.topo.view {
 		}
 		
 		private function onMouseMove(e:MouseEvent):void {
+			if (e.stageX <= 5 || e.stageX >= model.appWidth-5 || e.stageY <= 5 || e.stageY >= model.appHeight-5) {
+				this.selectedLayer.stopDrag();
+				CursorManager.removeCursor(_cursorId);
+			}
 			if (model.isSelectRect) {
 				_selectionRect.end = new Point(e.localX, e.localY);
 			}
