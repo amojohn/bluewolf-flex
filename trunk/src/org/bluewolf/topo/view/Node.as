@@ -161,7 +161,7 @@ package org.bluewolf.topo.view {
 			}
 		}
 		
-		private function onMoveEnd(e:EffectEvent):void {
+		private function onMoveEnd(e:EffectEvent=null):void {
 			dragStartPoint = new Point(this.x, this.y);
 			
 			getAllControlPoints();
@@ -363,6 +363,10 @@ package org.bluewolf.topo.view {
 					}
 				}
 			}
+		}
+		
+		public function redrawCurveLine():void {
+			this.onMoveEnd();
 		}
 		
 	}
