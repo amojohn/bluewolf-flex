@@ -134,12 +134,15 @@ package org.bluewolf.topo.view {
 		 * Reinitialize the area of this Group
 		 */
 		private function resetGroupArea():void {
+			var center:Point = new Point(model.appWidth / 2, model.appHeight / 2);
+			_topleft = new Point(center.x, center.y);
+			_bottomright = new Point(center.x, center.y);
+			realTL = new Point(center.x, center.y);
+			realBR = new Point(center.x, center.y);
 //			_topleft = new Point(model.appWidth, model.appHeight);
-			_topleft = new Point(0, 0);
-			_bottomright = new Point(0, 0);
+//			_bottomright = new Point(0, 0);
 //			realTL = new Point(model.appWidth, model.appHeight);
-			realTL = new Point(0, 0);
-			realBR = new Point(0, 0);
+//			realBR = new Point(0, 0);
 		}
 		
 		/**
