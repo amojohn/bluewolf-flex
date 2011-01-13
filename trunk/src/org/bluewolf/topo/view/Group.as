@@ -134,15 +134,10 @@ package org.bluewolf.topo.view {
 		 * Reinitialize the area of this Group
 		 */
 		private function resetGroupArea():void {
-			var center:Point = new Point(model.appWidth / 2, model.appHeight / 2);
-			_topleft = new Point(center.x, center.y);
-			_bottomright = new Point(center.x, center.y);
-			realTL = new Point(center.x, center.y);
-			realBR = new Point(center.x, center.y);
-//			_topleft = new Point(model.appWidth, model.appHeight);
-//			_bottomright = new Point(0, 0);
-//			realTL = new Point(model.appWidth, model.appHeight);
-//			realBR = new Point(0, 0);
+			_topleft = new Point(0, 0);
+			_bottomright = new Point(0, 0);
+			realTL = new Point(0, 0);
+			realBR = new Point(0, 0);
 		}
 		
 		/**
@@ -163,6 +158,18 @@ package org.bluewolf.topo.view {
 		 * @param node The input node to be used to computing
 		 */
 		private function setGroupRange(node:Node):void {
+			if (_topleft.x == 0 && _topleft.y == 0 && _bottomright.x == 0 && _bottomright.y == 0 &&
+				realTL.x == 0 && realTL.y == 0 && realBR.x == 0 && realBR.y == 0) {
+				_topleft.x = node.x - 5;
+				_topleft.y = node.y - 5;
+				realTL.x = node.x;
+				realTL.y = node.y;
+				_bottomright.x = node.x + node.width + 5;
+				_bottomright.y = node.y + node.height + 5;
+				realBR.x = node.x;
+				realBR.y = node.y;
+				return;
+			}
 			if (node.x < realTL.x) {
 				_topleft.x = node.x - 5;
 				realTL.x = node.x;
@@ -179,6 +186,7 @@ package org.bluewolf.topo.view {
 				_bottomright.y = node.y + node.height + 5;
 				realBR.y = node.y;
 			}
+			
 		}
 		
 		private function onLayerRemoveNode(e:LayerRemoveNodeEvent):void {
