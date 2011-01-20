@@ -66,7 +66,8 @@ package org.bluewolf.topo.view {
 		
 		private var model:ModelLocator = ModelLocator.getInstance();
 		private var _uid:String;
-		private var _icon:Image = new Image();
+		private var _image:Image = new Image();
+		private var _icon:String = "";
 		private var _label:Text = new Text();
 		private var _relativeX:Number = 0;
 		private var _relativeY:Number = 0;
@@ -96,7 +97,7 @@ package org.bluewolf.topo.view {
 			this.layout = layout;
 			this._label.selectable = false;
 			
-			this.addElement(_icon);
+			this.addElement(_image);
 			this.addElement(_label);
 			
 			this.relativeX = relaX;
@@ -108,7 +109,7 @@ package org.bluewolf.topo.view {
 		 * Register initial events for the current layer
 		 */
 		private function registerEvents():void {
-			this._icon.addEventListener(Event.COMPLETE, onIconComplete);
+			this._image.addEventListener(Event.COMPLETE, onIconComplete);
 			this.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
 			this.addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 			this.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
@@ -116,11 +117,11 @@ package org.bluewolf.topo.view {
 		}
 		
 		private function onIconComplete(e:Event):void {
-			this._icon.width = this._icon.contentWidth;
-			this._icon.height = this._icon.contentHeight;
-			this.width = this._icon.width + this._label.width;
-			if (this._icon.height > this._label.height)
-				this.height = this._icon.height;
+			this._image.width = this._image.contentWidth;
+			this._image.height = this._image.contentHeight;
+			this.width = this._image.width + this._label.width;
+			if (this._image.height > this._label.height)
+				this.height = this._image.height;
 			else
 				this.height = this._label.height;
 			adjustPosition();
@@ -181,7 +182,8 @@ package org.bluewolf.topo.view {
 		 * @param value Accessible path to a valid image
 		 */
 		public function set icon(value:String):void {
-			_icon.source = value;
+			_icon = value;
+			_image.source = value;
 		}
 		
 		/**
@@ -189,7 +191,7 @@ package org.bluewolf.topo.view {
 		 * @return Accessible path to this node's icon
 		 */
 		public function get icon():String {
-			return this._icon.source.toString();
+			return this._icon;
 		}
 		
 		/**
@@ -211,8 +213,8 @@ package org.bluewolf.topo.view {
 		 */
 		public function getAlignPoint():Point {
 			var point:Point = new Point(this.x, this.y);
-			point.x += _icon.width / 2;
-			point.y += _icon.height / 2;
+			point.x += _image.width / 2;
+			point.y += _image.height / 2;
 			return point;
 		}
 		
@@ -271,8 +273,8 @@ package org.bluewolf.topo.view {
 		private function adjustPosition():void {
 			if (model.autoAlign) {
 				var point:Point = this.getAlignPoint();
-				this.x = point.x - _icon.width / 2;
-				this.y = point.y - _icon.height / 2;
+				this.x = point.x - _image.width / 2;
+				this.y = point.y - _image.height / 2;
 				dragStartPoint = new Point(this.x, this.y);
 			}
 			invalidateDisplayList();
