@@ -186,7 +186,6 @@ package org.bluewolf.topo.view {
 				_bottomright.y = node.y + node.height + 5;
 				realBR.y = node.y;
 			}
-			
 		}
 		
 		private function onLayerRemoveNode(e:LayerRemoveNodeEvent):void {

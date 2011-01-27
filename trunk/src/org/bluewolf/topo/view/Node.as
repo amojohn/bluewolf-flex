@@ -52,6 +52,8 @@ package org.bluewolf.topo.view {
 	
 	import spark.components.BorderContainer;
 	import spark.layouts.HorizontalLayout;
+	import spark.layouts.VerticalLayout;
+	import spark.layouts.supportClasses.LayoutBase;
 	
 	[Event(name="LayerRemoveNode", type="org.bluewolf.topo.event.LayerRemoveNodeEvent")]
 	[Event(name="DragDrop", type="org.bluewolf.topo.event.DragDropEvent")]
@@ -120,10 +122,7 @@ package org.bluewolf.topo.view {
 			this._image.width = this._image.contentWidth;
 			this._image.height = this._image.contentHeight;
 			this.width = this._image.width + this._label.width;
-			if (this._image.height > this._label.height)
-				this.height = this._image.height;
-			else
-				this.height = this._label.height;
+			this.height = this._image.height + this._label.height;
 			adjustPosition();
 			this.invalidateDisplayList();
 			getAllControlPoints();
@@ -212,7 +211,8 @@ package org.bluewolf.topo.view {
 		 * Implemention of getAlignPoint method in IDragableElement
 		 */
 		public function getAlignPoint():Point {
-			var point:Point = new Point(this.x, this.y);
+			var point:Point = new Point(_image.x, _image.y);
+			point = this.contentToGlobal(point);
 			point.x += _image.width / 2;
 			point.y += _image.height / 2;
 			return point;
@@ -369,6 +369,35 @@ package org.bluewolf.topo.view {
 		
 		public function redrawCurveLine():void {
 			this.onMoveEnd();
+		}
+		
+		public function set labelPosition(value:String):void {
+			switch (value) {
+				case "top":
+					var layout:VerticalLayout = new VerticalLayout();
+					layout.paddingBottom = layout.paddingLeft = layout.paddingRight = layout.paddingTop = layout.gap = 0;
+					this.setElementIndex(_label, 0);
+					this.layout = layout;
+					break;
+				case "bottom":
+					layout = new VerticalLayout();
+					layout.paddingBottom = layout.paddingLeft = layout.paddingRight = layout.paddingTop = layout.gap = 0;
+					this.setElementIndex(_image, 0);
+					this.layout = layout;
+					break;
+				case "left":
+					var layout1:HorizontalLayout = new HorizontalLayout();
+					layout1.paddingBottom = layout1.paddingLeft = layout1.paddingRight = layout1.paddingTop = layout1.gap = 0;
+					this.setElementIndex(_label, 0);
+					this.layout = layout1;
+					break;
+				case "right":
+					layout1 = new HorizontalLayout();
+					layout1.paddingBottom = layout1.paddingLeft = layout1.paddingRight = layout1.paddingTop = layout1.gap = 0;
+					this.setElementIndex(_image, 0);
+					this.layout = layout1;
+					break;
+			}
 		}
 		
 	}
