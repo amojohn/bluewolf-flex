@@ -50,6 +50,7 @@ package org.bluewolf.topo.view {
 	import org.bluewolf.topo.model.ModelLocator;
 	import org.bluewolf.topo.util.TopoUtil;
 	
+	import spark.components.Application;
 	import spark.components.BorderContainer;
 	import spark.layouts.HorizontalLayout;
 	import spark.layouts.VerticalLayout;
@@ -212,6 +213,8 @@ package org.bluewolf.topo.view {
 		 */
 		public function getAlignPoint():Point {
 			var point:Point = new Point(_image.x, _image.y);
+			point.x -= stage.stageWidth - model.appWidth;
+			point.y -= stage.stageHeight - model.appHeight;
 			point = this.contentToGlobal(point);
 			point.x += _image.width / 2;
 			point.y += _image.height / 2;
