@@ -213,10 +213,6 @@ package org.bluewolf.topo.view {
 		 * Implemention of getAlignPoint method in IDragableElement
 		 */
 		public function getAlignPoint():Point {
-//			var point:Point = new Point(_image.x, _image.y);
-//			point.x -= stage.stageWidth - model.appWidth;
-//			point.y -= stage.stageHeight - model.appHeight;
-//			point = this.contentToGlobal(point);
 			var point:Point = new Point(this.x, this.y);
 			switch (_labelPosition) {
 				case "top":
