@@ -76,6 +76,7 @@ package org.bluewolf.topo.view {
 		private var _relativeY:Number = 0;
 		private var _isDragging:Boolean = false;
 		private var _connectionMap:Object;
+		private var _labelPosition:String;
 		
 		public var eMove:Move;
 		public var dragStartPoint:Point;
@@ -212,10 +213,19 @@ package org.bluewolf.topo.view {
 		 * Implemention of getAlignPoint method in IDragableElement
 		 */
 		public function getAlignPoint():Point {
-			var point:Point = new Point(_image.x, _image.y);
-			point.x -= stage.stageWidth - model.appWidth;
-			point.y -= stage.stageHeight - model.appHeight;
-			point = this.contentToGlobal(point);
+//			var point:Point = new Point(_image.x, _image.y);
+//			point.x -= stage.stageWidth - model.appWidth;
+//			point.y -= stage.stageHeight - model.appHeight;
+//			point = this.contentToGlobal(point);
+			var point:Point = new Point(this.x, this.y);
+			switch (_labelPosition) {
+				case "top":
+					point.y += _label.height;
+					break;
+				case "left":
+					point.x += _label.width;
+					break;
+			}
 			point.x += _image.width / 2;
 			point.y += _image.height / 2;
 			return point;
@@ -374,7 +384,12 @@ package org.bluewolf.topo.view {
 			this.onMoveEnd();
 		}
 		
+		public function get labelPosition():String {
+			return this._labelPosition;
+		}
+		
 		public function set labelPosition(value:String):void {
+			this._labelPosition = value;
 			switch (value) {
 				case "top":
 					var layout:VerticalLayout = new VerticalLayout();
