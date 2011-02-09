@@ -409,6 +409,7 @@ package org.bluewolf.topo.view {
 					this.layout = layout1;
 					break;
 			}
+			onMoveEnd();
 		}
 		
 	}
