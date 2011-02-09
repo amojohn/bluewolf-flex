@@ -28,12 +28,9 @@ package org.bluewolf.topo.view {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
-	import mx.controls.Alert;
 	import mx.effects.Zoom;
-	import mx.events.DragEvent;
 	import mx.events.FlexEvent;
 	import mx.managers.CursorManager;
-	import mx.managers.DragManager;
 	
 	import org.bluewolf.topo.event.BluewolfEventConst;
 	import org.bluewolf.topo.event.DragDropEvent;
@@ -199,19 +196,20 @@ package org.bluewolf.topo.view {
 		 * Handle of selecting or unselecting node by click it with CTRL button
 		 */
 		private function onSelectNode(e:SelectNodeEvent):void {
-			if (!e.ctrlKey) {// && _selectedNodes.length <= 1) {
-				/* If select more than one node, don't make the clicked node as the only one selected node */
-				for each (var node:Node in _selectedNodes) {
-					node.setStyle("dropShadowVisible", false);
-				}
-				_selectedNodes = new Array();
-				e.node.setStyle("dropShadowVisible", true);
-				_selectedNodes.push(e.node);
-			} else {
+			if (e.ctrlKey) {
 				if (e.isSelect && !ArrayUtil.arrayContainsValue(_selectedNodes, e.node)) {
 					_selectedNodes.push(e.node);
 				} else if (!e.isSelect && ArrayUtil.arrayContainsValue(_selectedNodes, e.node)) {
 					ArrayUtil.removeValueFromArray(_selectedNodes, e.node);
+				}
+			} else {
+				if (!ArrayUtil.arrayContainsValue(_selectedNodes, e.node)) {
+					for each (var node:Node in _selectedNodes) {
+						node.setStyle("dropShadowVisible", false);
+					}
+					_selectedNodes = new Array();
+					e.node.setStyle("dropShadowVisible", true);
+					_selectedNodes.push(e.node);
 				}
 			}
 		}
@@ -280,14 +278,14 @@ package org.bluewolf.topo.view {
 					node.setStyle("dropShadowVisible", false);
 				}
 				_selectedNodes = new Array();
-//				for each (var layer:Layer in _layers) {
-//					for each (node in layer.nodes) {
-//						if (_selectionRect.isNodeInRect(node.x, node.y)) {
-//							_selectedNodes.push(node);
-//							node.setStyle("dropShadowVisible", true);
-//						}
-//					}
-//				}
+				for each (var layer:Layer in _layers) {
+					for each (node in layer.nodes) {
+						if (_selectionRect.isNodeInRect(node.x, node.y)) {
+							_selectedNodes.push(node);
+							node.setStyle("dropShadowVisible", true);
+						}
+					}
+				}
 				this.removeElement(_selectionRect);
 				_selectionRect = null;
 			}

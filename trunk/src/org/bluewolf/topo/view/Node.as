@@ -32,7 +32,6 @@ package org.bluewolf.topo.view {
 	import flash.ui.ContextMenu;
 	import flash.ui.ContextMenuItem;
 	
-	import mx.controls.Alert;
 	import mx.controls.Image;
 	import mx.controls.Text;
 	import mx.core.IUID;
@@ -50,11 +49,9 @@ package org.bluewolf.topo.view {
 	import org.bluewolf.topo.model.ModelLocator;
 	import org.bluewolf.topo.util.TopoUtil;
 	
-	import spark.components.Application;
 	import spark.components.BorderContainer;
 	import spark.layouts.HorizontalLayout;
 	import spark.layouts.VerticalLayout;
-	import spark.layouts.supportClasses.LayoutBase;
 	
 	[Event(name="LayerRemoveNode", type="org.bluewolf.topo.event.LayerRemoveNodeEvent")]
 	[Event(name="DragDrop", type="org.bluewolf.topo.event.DragDropEvent")]
