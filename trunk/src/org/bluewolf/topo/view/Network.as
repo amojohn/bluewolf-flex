@@ -212,6 +212,8 @@ package org.bluewolf.topo.view {
 					_selectedNodes.push(e.node);
 				}
 			}
+			var layer:Layer = e.node.parent as Layer;
+			layer.setElementIndex(e.node, layer.numElements-1);
 		}
 		
 		public function selectNode(id:String=""):Node {
