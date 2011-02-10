@@ -188,7 +188,7 @@ package org.bluewolf.topo.view {
 			}
 		}
 		
-		private function onLayerRemoveNode(e:LayerRemoveNodeEvent):void {
+		protected function onLayerRemoveNode(e:LayerRemoveNodeEvent):void {
 			this.removeNodes([e.node]);
 		}
 		
