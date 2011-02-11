@@ -144,7 +144,7 @@ package org.bluewolf.topo.view {
 		 * @param link The link object to be added in this layer, must be an instance of Link class or Subclass from Link
 		 */
 		public function addLink(link:Link):void {
-			this.addElementAt(link, 0);
+			this.addElementAt(link, groups.length);
 			link.addEventListener(BluewolfEventConst.REMOVE_LINK, onRemoveLink);
 			this._links.push(link);
 			link.source.addConnection(link.destination.uid, link);
