@@ -28,6 +28,7 @@ package org.bluewolf.topo.view {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
+	import mx.controls.Image;
 	import mx.effects.Zoom;
 	import mx.events.FlexEvent;
 	import mx.managers.CursorManager;
@@ -59,6 +60,7 @@ package org.bluewolf.topo.view {
 		public var selectedLayer:Layer;
 		private var _selectionRect:SelectionRect;
 		private var _selectedNodes:Array;
+		private var _background:Image;
 		private var model:ModelLocator = ModelLocator.getInstance();
 		
 		/**
@@ -79,6 +81,10 @@ package org.bluewolf.topo.view {
 		
 		public function get layers():Array {
 			return this._layers;
+		}
+		
+		public function get background():Image {
+			return this._background;
 		}
 		
 		/**
@@ -118,6 +124,11 @@ package org.bluewolf.topo.view {
 		private function init(e:FlexEvent=null):void {
 			model.appWidth = this.width;
 			model.appHeight = this.height;
+			
+			_background = new Image();
+			_background.percentWidth = 100;
+			_background.percentHeight = 100;
+			this.addElement(_background);
 			
 			_layers = new Array();
 			_zoomCoefficient = 1;
