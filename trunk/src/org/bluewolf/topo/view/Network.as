@@ -25,9 +25,11 @@ package org.bluewolf.topo.view {
 	
 	import com.adobe.utils.ArrayUtil;
 	
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
+	import mx.controls.Alert;
 	import mx.controls.Image;
 	import mx.effects.Zoom;
 	import mx.events.FlexEvent;
@@ -60,7 +62,7 @@ package org.bluewolf.topo.view {
 		public var selectedLayer:Layer;
 		private var _selectionRect:SelectionRect;
 		private var _selectedNodes:Array;
-		private var _background:Image;
+		private var _background:Image = new Image();
 		private var model:ModelLocator = ModelLocator.getInstance();
 		
 		/**
@@ -95,6 +97,13 @@ package org.bluewolf.topo.view {
 			
 			this.initStyle();
 			this.registerEvents();
+			
+		}
+		
+		
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+			super.updateDisplayList(unscaledWidth,unscaledHeight);
+			
 		}
 		
 		/**
@@ -125,10 +134,10 @@ package org.bluewolf.topo.view {
 			model.appWidth = this.width;
 			model.appHeight = this.height;
 			
-			_background = new Image();
-			_background.percentWidth = 100;
-			_background.percentHeight = 100;
-			this.addElement(_background);
+			_background.scaleContent = true;
+			_background.width = this.width;
+			_background.height = this.height;
+			addElementAt(background,0);
 			
 			_layers = new Array();
 			_zoomCoefficient = 1;
