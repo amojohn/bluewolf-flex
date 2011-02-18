@@ -144,6 +144,7 @@ package org.bluewolf.topo.view {
 		}
 		
 		private function onMouseUp(e:MouseEvent):void {
+			e.stopPropagation();
 			this.stopDrag();
 			_isDragging = false;
 			
@@ -154,6 +155,7 @@ package org.bluewolf.topo.view {
 		}
 		
 		private function onMouseMove(e:MouseEvent):void {
+			e.stopPropagation();
 			if (_isDragging) {
 				var event:NodeMoveEvent = new NodeMoveEvent(BluewolfEventConst.NODE_MOVE, true, true, this);
 				this.dispatchEvent(event);
