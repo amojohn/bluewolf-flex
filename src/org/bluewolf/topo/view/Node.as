@@ -120,8 +120,8 @@ package org.bluewolf.topo.view {
 		private function onIconComplete(e:Event):void {
 			this._image.width = this._image.contentWidth;
 			this._image.height = this._image.contentHeight;
-			this.width = this._image.width + this._label.width;
-			this.height = this._image.height + this._label.height;
+//			this.width = this._image.width + this._label.width;
+//			this.height = this._image.height + this._label.height;
 			adjustPosition();
 			this.invalidateDisplayList();
 			getAllControlPoints();
