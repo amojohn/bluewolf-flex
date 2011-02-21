@@ -281,7 +281,6 @@ package org.bluewolf.topo.view {
 		}
 		
 		private function onMouseMove(e:MouseEvent):void {
-			e.stopPropagation();
 			if (e.localX <= 5 || e.localX >= model.appWidth-5 || e.localY <= 5 || e.localY >= model.appHeight-5) {
 				this.selectedLayer.stopDrag();
 				CursorManager.removeCursor(_cursorId);
