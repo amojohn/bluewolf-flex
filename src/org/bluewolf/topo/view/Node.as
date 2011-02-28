@@ -206,7 +206,6 @@ package org.bluewolf.topo.view {
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
 			if (this._labelPosition == "left" || this._labelPosition == "right") {
 				this.width = this._image.width + this._label.width;
-//				this.height = this._image.height + this._label.height;
 			}
 			if (this._labelPosition == "top" || this._labelPosition == "bottom") {
 				this.height = this._image.height + this._label.height;
@@ -225,6 +224,7 @@ package org.bluewolf.topo.view {
 		 * Implemention of getAlignPoint method in IDragableElement
 		 */
 		public function getAlignPoint():Point {
+			this.invalidateDisplayList();
 			var point:Point = new Point(this.x, this.y);
 			switch (_labelPosition) {
 				case "top":
