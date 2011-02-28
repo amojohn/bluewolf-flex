@@ -208,7 +208,7 @@ package org.bluewolf.topo.view {
 				this.width = this._image.width + this._label.width;
 //				this.height = this._image.height + this._label.height;
 			}
-			if (this._labelPosition == "left" || this._labelPosition == "right") {
+			if (this._labelPosition == "top" || this._labelPosition == "bottom") {
 				this.height = this._image.height + this._label.height;
 			}
 		}
