@@ -204,8 +204,13 @@ package org.bluewolf.topo.view {
 		
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
-			this.width = this._image.width + this._label.width;
-			this.height = this._image.height + this._label.height;
+			if (this._labelPosition == "left" || this._labelPosition == "right") {
+				this.width = this._image.width + this._label.width;
+//				this.height = this._image.height + this._label.height;
+			}
+			if (this._labelPosition == "left" || this._labelPosition == "right") {
+				this.height = this._image.height + this._label.height;
+			}
 		}
 
 		
@@ -419,6 +424,7 @@ package org.bluewolf.topo.view {
 					this.layout = layout1;
 					break;
 			}
+			invalidateDisplayList();
 			onMoveEnd();
 		}
 		
