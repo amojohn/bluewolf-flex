@@ -199,7 +199,15 @@ package org.bluewolf.topo.view {
 		 */
 		public function set label(value:String):void {
 			this._label.text = value;
+			invalidateDisplayList();
 		}
+		
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+			super.updateDisplayList(unscaledWidth,unscaledHeight);
+			this.width = this._image.width + this._label.width;
+			this.height = this._image.height + this._label.height;
+		}
+
 		
 		/**
 		 * Node name to display right to the icon
