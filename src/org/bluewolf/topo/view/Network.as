@@ -270,6 +270,11 @@ package org.bluewolf.topo.view {
 		private function onMouseDown(e:MouseEvent):void {
 //			if (e.altKey) {
 				e.stopPropagation();
+				try {
+					CursorManager.removeCursor(_cursorId);
+				} catch (err:Error) {
+					trace(err);
+				}
 				this.selectedLayer.startDrag();
 				_cursorId = CursorManager.setCursor(move_hand);
 //			} else {
