@@ -202,6 +202,14 @@ package org.bluewolf.topo.view {
 			invalidateDisplayList();
 		}
 		
+		public function get iconWidth():Number {
+			return this._image.contentWidth;
+		}
+		
+		public function get iconHeight():Number {
+			return this._image.contentHeight;
+		}
+		
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 			super.updateDisplayList(unscaledWidth,unscaledHeight);
 			if (this._labelPosition == "left" || this._labelPosition == "right") {
