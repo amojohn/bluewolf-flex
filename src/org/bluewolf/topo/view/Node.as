@@ -202,12 +202,8 @@ package org.bluewolf.topo.view {
 			invalidateDisplayList();
 		}
 		
-		public function get iconWidth():Number {
-			return this._image.contentWidth;
-		}
-		
-		public function get iconHeight():Number {
-			return this._image.contentHeight;
+		public function get iconImage():Image {
+			return this._image;
 		}
 		
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
