@@ -156,7 +156,9 @@ package org.bluewolf.topo.view {
 				if (this.source.getConnection(this.destination.uid).length <= 1 || lineType == "straight") {
 					this.graphics.lineTo(dPoint.x, dPoint.y);
 				} else {
-					this.graphics.curveTo(cPoint.x, cPoint.y, dPoint.x, dPoint.y);
+					if (cPoint != null) {
+						this.graphics.curveTo(cPoint.x, cPoint.y, dPoint.x, dPoint.y);
+					}
 				}
 			}
 			invalidateDisplayList();
