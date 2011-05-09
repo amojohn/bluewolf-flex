@@ -270,6 +270,10 @@ package org.bluewolf.topo.view {
 		private function onMouseDown(e:MouseEvent):void {
 //			if (e.altKey) {
 				e.stopPropagation();
+				
+				var event:Event = new Event("startDragLayer",true);
+				dispatchEvent(event);
+				
 				try {
 					CursorManager.removeCursor(_cursorId);
 				} catch (err:Error) {
@@ -289,6 +293,8 @@ package org.bluewolf.topo.view {
 			if (e.localX <= 5 || e.localX >= model.appWidth-5 || e.localY <= 5 || e.localY >= model.appHeight-5) {
 				try {
 					this.selectedLayer.stopDrag();
+					var event:Event = new Event("stopDragLayer",true);
+					dispatchEvent(event);
 				} catch (error:Error) {
 					trace(error);
 				}
@@ -301,6 +307,10 @@ package org.bluewolf.topo.view {
 		
 		private function onMouseUp(e:MouseEvent):void {
 			e.stopPropagation();
+			
+			var event:Event = new Event("stopDragLayer",true);
+			dispatchEvent(event);
+			
 			this.selectedLayer.stopDrag();
 			CursorManager.removeCursor(_cursorId);
 			if (model.isSelectRect) {
