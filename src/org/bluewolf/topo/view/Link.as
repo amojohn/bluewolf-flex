@@ -210,7 +210,7 @@ package org.bluewolf.topo.view {
 			this.dispatchEvent(event);
 		}
 		
-		private function onNodeMove(e:NodeMoveEvent):void {
+		protected function onNodeMove(e:NodeMoveEvent):void {
 			drawLink("straight");
 		}
 		
